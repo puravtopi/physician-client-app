@@ -1,0 +1,162 @@
+<div class="detail-page" *ngIf="physician; else notFound">
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Home</a>
+    <span class="separator">/</span>
+    <a routerLink="/physicians">Find Physicians</a>
+    <span class="separator">/</span>
+    <a [routerLink]="['/physicians']" [queryParams]="{ specialty: physician.specialty }">
+      {{ physician.city }}, {{ physician.state }}
+    </a>
+    <span class="separator">/</span>
+    <span class="current">{{ physician.specialty }}</span>
+    <span class="separator">/</span>
+    <span class="current">{{ physician.name }}</span>
+  </nav>
+
+  <!-- Profile Hero -->
+  <section class="profile-hero">
+    <div class="hero-main">
+      <div class="avatar">{{ physician.image }}</div>
+      <div class="hero-info">
+        <div class="hero-badges">
+          <span class="badge verified" *ngIf="physician.verified">✓ Verified Provider</span>
+          <span class="badge accepting">Accepting New Patients</span>
+        </div>
+        <h1>{{ physician.name }}</h1>
+        <p class="credential">{{ physician.specialty }}</p>
+        <div class="rating-row">
+          <span class="stars">
+            <span *ngFor="let star of getRatingStars(physician.rating)" class="star">{{ star }}</span>
+          </span>
+          <span class="rating-value">{{ physician.rating }}</span>
+          <span class="review-link">({{ physician.reviewCount }} patient reviews)</span>
+        </div>
+        <p class="hero-location">📍 {{ fullAddress }}</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="detail-layout">
+    <!-- Main Content -->
+    <main class="detail-main">
+      <!-- About -->
+      <section class="detail-card">
+        <h2>About {{ physician.name.split(' ').slice(-1)[0] }}</h2>
+        <p class="about-text">{{ physician.bio }}</p>
+        <div class="highlights">
+          <div class="highlight-item">
+            <span class="highlight-label">Experience</span>
+            <span class="highlight-value">{{ physician.experience }}+ years</span>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-label">Hospital</span>
+            <span class="highlight-value">{{ physician.hospital }}</span>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-label">Languages</span>
+            <span class="highlight-value">{{ physician.languages.join(', ') }}</span>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-label">Insurance</span>
+            <span class="highlight-value" [class.accepts]="physician.acceptsInsurance">
+              {{ physician.acceptsInsurance ? 'Accepted' : 'Not Accepted' }}
+            </span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Practice Locations -->
+      <section class="detail-card">
+        <h2>Practice Locations</h2>
+        <div class="location-list">
+          <article class="location-item" *ngFor="let location of practiceLocations">
+            <h3>{{ location.name }}</h3>
+            <p class="location-address">{{ location.address }}</p>
+            <a class="location-phone" [href]="'tel:' + location.phone">{{ location.phone }}</a>
+          </article>
+        </div>
+      </section>
+
+      <!-- Patient Reviews -->
+      <section class="detail-card">
+        <div class="reviews-header">
+          <h2>Patient Reviews</h2>
+          <button type="button" class="btn-write-review">Write a Review</button>
+        </div>
+        <div class="reviews-summary">
+          <div class="summary-score">
+            <span class="big-rating">{{ physician.rating }}</span>
+            <span class="stars">
+              <span *ngFor="let star of getRatingStars(physician.rating)" class="star">{{ star }}</span>
+            </span>
+            <span class="summary-count">Based on {{ physician.reviewCount }} reviews</span>
+          </div>
+        </div>
+        <div class="review-list">
+          <article class="review-item" *ngFor="let review of reviews">
+            <div class="review-top">
+              <span class="review-author">{{ review.author }}</span>
+              <span class="review-date">{{ review.date }}</span>
+            </div>
+            <div class="review-stars">
+              <span *ngFor="let star of getRatingStars(review.rating)" class="star">{{ star }}</span>
+            </div>
+            <p class="review-text">{{ review.text }}</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="detail-sidebar" >
+      <div class="sidebar-card booking-card" style="display: none;">
+        <h3>Book an Appointment</h3>
+        <p class="sidebar-text">Schedule with {{ physician.name.split(' ').slice(-1)[0] }} at a time that works for you.</p>
+        <div class="availability-badge" [class.available]="physician.availableSlots > 0">
+          {{ physician.availableSlots }} slot{{ physician.availableSlots !== 1 ? 's' : '' }} available this week
+        </div>
+        <button type="button" class="btn-book" [disabled]="physician.availableSlots === 0">
+          Book Now
+        </button>
+        <a class="btn-call" [href]="'tel:' + physician.phone">📞 Call Office</a>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Contact Information</h3>
+        <ul class="contact-list">
+          <li *ngIf="physician.phone">
+            <span class="contact-label">Phone</span>
+            <a [href]="'tel:' + physician.phone">{{ physician.phone }}</a>
+          </li>
+          <li *ngIf="physician.email">
+            <span class="contact-label">Email</span>
+            <a [href]="'mailto:' + physician.email">{{ physician.email }}</a>
+          </li>
+          <li>
+            <span class="contact-label">Address</span>
+            <span>{{ fullAddress }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>Quick Facts</h3>
+        <ul class="facts-list">
+          <li><strong>Specialty:</strong> {{ physician.specialty }}</li>
+          <li><strong>Distance:</strong> {{ physician.distance }} km away</li>
+          <li><strong>Verified:</strong> {{ physician.verified ? 'Yes' : 'No' }}</li>
+          <li><strong>Insurance:</strong> {{ physician.acceptsInsurance ? 'Accepted' : 'Not Accepted' }}</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<ng-template #notFound>
+  <div class="not-found">
+    <h1>Physician Not Found</h1>
+    <p>The physician profile you are looking for does not exist.</p>
+    <a routerLink="/physicians" class="btn-back">← Back to Physicians</a>
+  </div>
+</ng-template>

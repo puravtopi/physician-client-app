@@ -1,0 +1,195 @@
+
+  <!-- Navigation Bar -->
+ 
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-background"></div>
+    <div class="hero-content">
+      <h1>Find Expert Physicians, <span class="highlight">Book Appointments</span></h1>
+      <p>Connect with top-rated healthcare professionals in your area - all at your fingertips</p>
+      <form class="search-box" (ngSubmit)="onSearch()" autocomplete="off">
+        <div class="search-fields">
+          <div class="search-field specialty-field">
+            <label for="specialty-input">Specialty</label>
+            <div class="autocomplete-wrapper">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+              <input
+                id="specialty-input"
+                type="text"
+                [(ngModel)]="specialtyQuery"
+                name="specialty"
+                placeholder="e.g. Cardiology, Dermatology..."
+                (input)="onSpecialtyInput()"
+                (focus)="onSpecialtyFocus()"
+                (blur)="onSpecialtyBlur()"
+                (keydown)="onSpecialtyKeydown($event)"
+                autocomplete="off"
+              />
+              <ul class="autocomplete-dropdown" *ngIf="showSuggestions && filteredSpecialties.length">
+                <li
+                  *ngFor="let item of filteredSpecialties; let i = index"
+                  [class.active]="i === activeSuggestionIndex"
+                  (mousedown)="selectSpecialty(item)"
+                >
+                  <span class="suggestion-icon">{{ item.icon }}</span>
+                  <span class="suggestion-text">
+                    <strong>{{ item.name }}</strong>
+                    <small>{{ item.description }}</small>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="search-divider" aria-hidden="true"></div>
+
+          <div class="search-field zip-field">
+            <label for="zip-input">Zip Code</label>
+            <div class="input-wrapper">
+              <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <input
+                id="zip-input"
+                type="text"
+                [(ngModel)]="zipCode"
+                name="zipCode"
+                placeholder="e.g. 10001"
+                maxlength="5"
+                inputmode="numeric"
+                pattern="[0-9]*"
+                (input)="onZipInput()"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-search" [disabled]="!canSearch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          Search
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="stats">
+    <div class="stat-item">
+      <div class="stat-number">50K+</div>
+      <p>Physicians</p>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">500K+</div>
+      <p>Happy Patients</p>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <div class="stat-number">4.8★</div>
+      <p>Average Rating</p>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="section-header">
+      <h2>Why Choose Us</h2>
+      <p>The easiest way to find and book with healthcare professionals</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section class="testimonials">
+    <div class="section-header">
+      <h2>What Patients Say</h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card" *ngFor="let testimonial of testimonials">
+        <div class="stars">
+          <span *ngFor="let i of [1,2,3,4,5]">★</span>
+        </div>
+        <p class="testimonial-text">"{{ testimonial.text }}"</p>
+        <p class="testimonial-author">— {{ testimonial.author }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Specialties Section -->
+  <section class="specialties" id="specialties">
+    <div class="section-header">
+      <h2>Find Physicians by Specialty</h2>
+      <p>Browse through our directory of specialists</p>
+    </div>
+    <div class="specialties-grid">
+      <div class="specialty-card" *ngFor="let specialty of specialties">
+        <div class="specialty-icon">{{ specialty.icon ? specialty.icon : '⚕️' }}</div>
+        <h4>{{ specialty.name }}</h4>
+        <p>{{ specialty.description }}</p>
+        <a href="#" class="specialty-link">Find Physicians →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Physicians Section -->
+  <section class="physicians">
+    <div class="section-header">
+      <h2>Top-Rated Physicians Near You</h2>
+      <p>Browse and compare qualified healthcare professionals</p>
+    </div>
+    <div class="physicians-grid">
+      <div class="physician-card" *ngFor="let physician of physicians">
+        <div class="physician-image">{{ physician.image ? physician.image : '👩‍⚕️' }}</div>
+        <h4>{{ physician.name }}</h4>
+        <p class="specialty">{{ physician.specialty }}</p>
+        <p class="location">📍 {{ physician.location }}</p>
+        <div class="rating">
+          <span class="stars">
+            <span *ngFor="let i of [1,2,3,4,5]" [class.filled]="i <= physician.rating">★</span>
+          </span>
+          <span class="reviews">{{ physician.rating }} ({{ physician.reviewCount }} reviews)</span>
+        </div>
+        <button class="btn-book">Book Appointment</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Articles Section -->
+  <section class="articles" id="articles">
+    <div class="section-header">
+      <h2>Health Resources & Articles</h2>
+      <p>Learn from our health education experts</p>
+    </div>
+    <div class="articles-grid">
+      <div class="article-card" *ngFor="let article of articles">
+        <div class="article-image">{{ article.image }}</div>
+        <h4>{{ article.title }}</h4>
+        <p class="article-date">{{ article.date | date: 'MMM d, yyyy' }}</p>
+        <a href="#" class="article-link">Read More →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta" id="contact">
+    <div class="cta-content">
+      <h2>Ready to Find Your Perfect Physician?</h2>
+      <p>Join thousands of patients who trust our platform to find quality healthcare</p>
+      <button class="btn-cta">Start Your Search Now</button>
+    </div>
+  </section>
+
+
