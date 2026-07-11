@@ -3,7 +3,7 @@
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a routerLink="/">Home</a>
     <span class="separator">/</span>
-    <a routerLink="/physicians">Find Physicians</a>
+    <a routerLink="/physicians">Find Professionals</a>
     <span class="separator">/</span>
     <a [routerLink]="['/physicians']" [queryParams]="{ specialty: physician.specialty }">
       {{ physician.city }}, {{ physician.state }}
@@ -55,7 +55,7 @@
           </div>
           <div class="highlight-item">
             <span class="highlight-label">Languages</span>
-            <span class="highlight-value">{{ physician.languages.join(', ') }}</span>
+            <span class="highlight-value">{{ physician?.languages.join(', ') }}</span>
           </div>
           <div class="highlight-item">
             <span class="highlight-label">Insurance</span>
@@ -81,8 +81,8 @@
       <!-- Patient Reviews -->
       <section class="detail-card">
         <div class="reviews-header">
-          <h2>Patient Reviews</h2>
-          <button type="button" class="btn-write-review">Write a Review</button>
+          <h2>Reviews</h2>
+          <!-- <button type="button" class="btn-write-review">Write a Review</button> -->
         </div>
         <div class="reviews-summary">
           <div class="summary-score">
@@ -155,8 +155,8 @@
 
 <ng-template #notFound>
   <div class="not-found">
-    <h1>Physician Not Found</h1>
-    <p>The physician profile you are looking for does not exist.</p>
-    <a routerLink="/physicians" class="btn-back">← Back to Physicians</a>
+    <h1>Professional Not Found</h1>
+    <p>The professional profile you are looking for does not exist.</p>
+    <a routerLink="/physicians" class="btn-back">← Back to Professionals</a>
   </div>
 </ng-template>

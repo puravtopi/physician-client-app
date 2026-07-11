@@ -35,18 +35,18 @@ export class HomeComponent {
   features = [
     {
       icon: '🔍',
-      title: 'Find Expert Physicians',
-      description: 'Access profiles of qualified physicians specializing in various medical conditions.'
+      title: 'Find Expert Professionals',
+      description: 'Access profiles of qualified professionals specializing in various fields.'
     },
     {
       icon: '⭐',
-      title: 'Read Patient Reviews',
-      description: 'Read genuine reviews from other patients to help you make informed decisions.'
+      title: 'Read Customers Reviews',
+      description: 'Read genuine reviews from other customers to help you make informed decisions.'
     },
     {
       icon: '✓',
       title: 'Book Appointments Easily',
-      description: 'Find the right physician and book appointments that fit your schedule.'
+      description: 'Find the right professional and book appointments that fit your schedule.'
     }
   ];
 

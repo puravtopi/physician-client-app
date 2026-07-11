@@ -1,7 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Physician } from '../../core/models/physician.model';
+import { ApiService } from '../../core/services/api.services'; // Adjust path
+import { Specialty } from '../../core/models/specialties.modal'; // Adjust path
+import { PagedResponse } from '../../core/models/api-response.model'; // Adjust path
+import { HttpParams } from '@angular/common/http';
+import { IpService } from '../../core/services/ip.service'; // Adjust path
+import { Leads } from '../../core/models/leads.model';
+
 
 interface Review {
   id: number;
@@ -19,161 +26,37 @@ interface PracticeLocation {
 
 @Component({
   selector: 'app-physician-detail',
-  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './physician-detail.html',
-  styleUrl: './physician-detail.css',
-})
+  styleUrl: './physician-detail.css'
+ })
 export class PhysicianDetail implements OnInit {
   physician: Physician | null = null;
   reviews: Review[] = [];
   practiceLocations: PracticeLocation[] = [];
 
-  private readonly physicians: Physician[] = [
-    {
-      id: 1,
-      name: 'Dr. Sarah Johnson',
-      specialty: 'Cardiology',
-      bio: 'Experienced cardiologist with 15+ years of practice. Specializes in preventive care and advanced cardiac treatment. Dr. Johnson is known for her patient-centered approach and commitment to helping patients manage heart health through evidence-based care.',
-      rating: 4.8,
-      reviewCount: 342,
-      image: '👩‍⚕️',
-      location: 'New York Medical Center, Manhattan',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      distance: 0.5,
-      languages: ['English', 'Spanish'],
-      experience: 15,
-      verified: true,
-      acceptsInsurance: true,
-      availableSlots: 3,
-      phone: '(555) 123-4567',
-      email: 'sarah.johnson@nycmedical.com',
-      hospital: 'New York Presbyterian',
-    },
-    {
-      id: 2,
-      name: 'Dr. Michael Chen',
-      specialty: 'Orthopedics',
-      bio: 'Board-certified orthopedic surgeon with expertise in sports medicine and joint replacement. Dr. Chen helps patients recover from injuries and improve mobility through personalized treatment plans.',
-      rating: 4.9,
-      reviewCount: 289,
-      image: '👨‍⚕️',
-      location: 'Manhattan Orthopedic Clinic, Manhattan',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10002',
-      distance: 1.2,
-      languages: ['English', 'Mandarin'],
-      experience: 18,
-      verified: true,
-      acceptsInsurance: true,
-      availableSlots: 2,
-      phone: '(555) 234-5678',
-      email: 'michael.chen@ortho.com',
-      hospital: 'Hospital for Special Surgery',
-    },
-    {
-      id: 3,
-      name: 'Dr. Emily Rodriguez',
-      specialty: 'Dermatology',
-      bio: 'Dermatologist specializing in skin cancer prevention and cosmetic treatments. Dr. Rodriguez provides comprehensive skin care for patients of all ages.',
-      rating: 4.7,
-      reviewCount: 156,
-      image: '👩‍⚕️',
-      location: 'NYC Dermatology Associates, Midtown',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10017',
-      distance: 2.1,
-      languages: ['English', 'Spanish', 'Portuguese'],
-      experience: 12,
-      verified: true,
-      acceptsInsurance: false,
-      availableSlots: 5,
-      phone: '(555) 345-6789',
-      email: 'emily.rodriguez@dermatology.com',
-      hospital: 'Mount Sinai Medical Center',
-    },
-    {
-      id: 4,
-      name: 'Dr. James Wilson',
-      specialty: 'Neurology',
-      bio: 'Neurologist with special focus on migraine management and neurological disorders. Dr. Wilson combines clinical expertise with compassionate care.',
-      rating: 4.6,
-      reviewCount: 198,
-      image: '👨‍⚕️',
-      location: 'Columbia Neurology Center, Upper West Side',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10024',
-      distance: 3.4,
-      languages: ['English', 'French'],
-      experience: 14,
-      verified: true,
-      acceptsInsurance: true,
-      availableSlots: 1,
-      phone: '(555) 456-7890',
-      email: 'james.wilson@neurology.com',
-      hospital: 'Columbia University Medical Center',
-    },
-    {
-      id: 5,
-      name: 'Dr. Lisa Thompson',
-      specialty: 'Pediatrics',
-      bio: 'Pediatrician dedicated to child health and preventive medicine. Dr. Thompson creates a welcoming environment for families and focuses on long-term wellness.',
-      rating: 4.9,
-      reviewCount: 267,
-      image: '👩‍⚕️',
-      location: "Brooklyn Children's Health, Brooklyn",
-      city: 'New York',
-      state: 'NY',
-      zipCode: '11201',
-      distance: 4.8,
-      languages: ['English'],
-      experience: 11,
-      verified: true,
-      acceptsInsurance: true,
-      availableSlots: 4,
-      phone: '(555) 567-8901',
-      email: 'lisa.thompson@peds.com',
-      hospital: 'NYC Health + Hospitals',
-    },
-    {
-      id: 6,
-      name: 'Dr. Robert Martinez',
-      specialty: 'Gastroenterology',
-      bio: 'Gastroenterologist experienced in digestive health and endoscopic procedures. Dr. Martinez is accepting new patients and offers flexible scheduling.',
-      rating: 4.5,
-      reviewCount: 134,
-      image: '👨‍⚕️',
-      location: 'NYU Gastroenterology, East Village',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10003',
-      distance: 1.8,
-      languages: ['English', 'Spanish'],
-      experience: 16,
-      verified: false,
-      acceptsInsurance: true,
-      availableSlots: 2,
-      phone: '(555) 678-9012',
-      email: 'robert.martinez@gastro.com',
-      hospital: 'NYU Langone Medical Center',
-    },
-  ];
+  constructor(private route: ActivatedRoute,private ipService: IpService,
+    private apiService: ApiService, private ctr:ChangeDetectorRef) {
+  
 
-  constructor(private route: ActivatedRoute) {}
+  }
 
   ngOnInit(): void {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.physician = this.physicians.find((p) => p.id === id) ?? null;
-
-    if (this.physician) {
-      this.practiceLocations = this.buildPracticeLocations(this.physician);
-      this.reviews = this.buildReviews(this.physician);
+    // Use paramMap.subscribe instead of snapshot.paramMap
+  // This "listens" for ID changes while the user is still on the component
+  let ts=this;
+  this.route.paramMap.subscribe(params => {
+    const id = Number(params.get('id'));
+    
+    if (id) {
+      // Clear old data so it doesn't flicker while loading the new one
+      ts.physician = null; 
+      
+      // Call your API method
+      ts.saveLeads(id);
+      ts.getPhysicianById(id);
     }
+  });
   }
 
   getRatingStars(rating: number): string[] {
@@ -236,5 +119,52 @@ export class PhysicianDetail implements OnInit {
         text: 'Very knowledgeable and caring. Helped me understand my treatment options and next steps.',
       },
     ];
+  }
+
+  saveLeads(id:number)
+  {
+    this.ipService.getIpAddress().subscribe({
+    next: (res: any) => {
+      // 2. Now you have the IP inside 'res.ip'
+      const data: Leads = {
+        iP_Address: res, // Use the value from the response
+        placeId: id
+      };
+
+      console.log('Data ready to send:', data);
+
+      // 3. Now call your AddLeads API
+      this.apiService.post<number>('Leads/AddLeads', data).subscribe(result => {
+        console.log('Saved to DB!');
+      });
+    },
+    error: (err) => console.error('Could not get IP', err)
+  });
+  }
+
+  getPhysicianById(id: number) {
+        // 1. Set up query parameters
+        const params = new HttpParams()
+          .set('id', id);
+
+          let ts=this;
+    
+        // 2. Call the API
+        this.apiService.get<Physician>('Physio/GetPhysiciansById', params)
+          .subscribe({
+            next: (response) => {
+             ts.physician=response;
+             ts.ctr.detectChanges();
+             
+    // if (ts.physician) {
+    //   ts.practiceLocations = ts.buildPracticeLocations(ts.physician);
+    //   ts.reviews = ts.buildReviews(ts.physician);
+    // }
+             console.log('Physician Details', ts.physician);
+            },
+            error: (err) => {
+              console.error('Error fetching physicians', err);
+            }
+          });
   }
 }

@@ -179,7 +179,7 @@
               <p class="physician-specialty">{{ physician.specialty }}</p>
               <div class="physician-meta">
                 <span class="verified-badge" *ngIf="physician.verified">✓ Verified</span>
-                <span class="distance">📍 {{ physician.distance }} km away</span>
+                <!-- <span class="distance">📍 {{ physician.distance }} km away</span> -->
               </div>
             </div>
           </div>
@@ -210,7 +210,7 @@
             </div>
             <div class="detail-item">
               <span class="detail-label">Languages:</span>
-              <span class="detail-value">{{ physician.languages.join(', ') }}</span>
+              <span class="detail-value">{{ physician.languages?.join(', ') }}</span>
             </div>
             <div class="detail-item">
               <span class="detail-label">Insurance:</span>
@@ -246,6 +246,51 @@
           </div>
         </article>
       </div>
+          <!-- Pagination UI -->
+  <div class="pagination-wrapper" *ngIf="totalItems > 0">
+    <div class="pagination-controls">
+      <!-- First Page -->
+      <button 
+        class="pagination-btn" 
+        (click)="goToFirst()" 
+        [disabled]="currentPage === 1">
+        « First
+      </button>
+
+      <!-- Previous Page -->
+      <button 
+        class="pagination-btn" 
+        (click)="goToPrevious()" 
+        [disabled]="currentPage === 1">
+        ‹ Prev
+      </button>
+
+      <!-- Current Status -->
+      <span class="pagination-info">
+        Page <strong>{{ currentPage }}</strong> of <strong>{{ totalPages }}</strong>
+      </span>
+
+      <!-- Next Page -->
+      <button 
+        class="pagination-btn" 
+        (click)="goToNext()" 
+        [disabled]="currentPage === totalPages">
+        Next ›
+      </button>
+
+      <!-- Last Page -->
+      <button 
+        class="pagination-btn" 
+        (click)="goToLast()" 
+        [disabled]="currentPage === totalPages">
+        Last »
+      </button>
+    </div>
+    
+    <!-- <p class="total-count">Total: {{ totalItems }} physicians found</p> -->
+  </div>
     </main>
+
+
   </div>
 </div>
