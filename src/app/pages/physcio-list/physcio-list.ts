@@ -1,10 +1,11 @@
 import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { Physician, PhysicianFilter, PhysicianSort } from '../../core/models/physician.model';
 import { ApiService } from '../../core/services/api.services'; // Adjust path
 import { Specialty } from '../../core/models/specialties.modal'; // Adjust path
+import { Zips } from '../../core/models/zips.model'; // Adjust path
 import { PagedResponse } from '../../core/models/api-response.model'; // Adjust path
 import { HttpParams } from '@angular/common/http';
 
@@ -19,10 +20,12 @@ import { HttpParams } from '@angular/common/http';
 })
 export class PhyscioList implements OnInit {
   currentPage: number = 1;
-  pageSize: number = 3;
+  pageSize: number = 9;
   totalItems: number = 0; 
   allPhysicians: Physician[] = [];  
+  allZips: Zips[] = [];
   filteredPhysicians: Physician[] = [];
+  allSpecialties: Specialty[] = [];
   
   // Filter properties
   filters: PhysicianFilter = {
@@ -48,42 +51,124 @@ export class PhyscioList implements OnInit {
   locations: string[] = [];
   minRatingOptions = [3.5, 4.0, 4.5];
 
-  constructor(private apiService: ApiService,private ctr:ChangeDetectorRef) {
-    this.loadPhysicians(1);
-    this.extractFilterOptions();
-    //this.applyFilters();
+  constructor(private apiService: ApiService,
+  private ctr: ChangeDetectorRef,
+  private route: ActivatedRoute
+  ) {
    
+    this.loadZips();
+    this.loadSpecialties();
+
+    
   }
 
-  ngOnInit(): void {
-    //this.applyFilters();
+    ngOnInit(): void {
+    // 3. Use an Arrow Function (params) => { } 
+    // This preserves the 'this' context automatically.
+    this.route.queryParamMap.subscribe({
+      next: (params) => {
+        
+        // 4. Handle Null vs Undefined (Fixes TS2345)
+        const category = params.get('specialty') ?? undefined;
+        const zipcode = params.get('zipCode') ?? undefined;
+
+        console.log('Category:', category, 'Zip:', zipcode);
+
+        if (category || zipcode) {
+          this.allPhysicians = []; 
+           this.filters.location=zipcode ?? '';
+           this.filters.specialty=category ?? '';   
+          // 5. Call your methods using 'this'
+          this.loadPhysicians(1);
+               
+        }
+      },
+      error: (err) =>console.error('Route error:', err)
+    });
+
+    
   }
   
-    loadPhysicians(page: number = 1) {
+    loadPhysicians(page: number = 1): void {
 
-      this.currentPage = page;
+      let ts=this;
+      let category= this.filters.specialty??'';
+      let zipcode= this.filters.location??'';
+      let minRating= this.filters.minRating??0;
+      ts.currentPage = page;
+      
+      debugger;
       // 1. Set up query parameters
       const params = new HttpParams()
-        .set('searchText', '') // Empty string if no search
-        .set('pageNumber',this.currentPage.toString())
+        .set('category', category)
+        .set('zipcode', zipcode)
+        .set('minRating', minRating.toString())
+        .set('pageNumber', this.currentPage.toString())
         .set('pageSize', this.pageSize.toString()); // Passing 0 to get all records as per your logic
   
       // 2. Call the API
-      this.apiService.get<PagedResponse<Physician>>('Physio/GetPhysicians', params)
+      ts.apiService.get<PagedResponse<Physician>>('Physio/GetPhysicians', params)
         .subscribe({
           next: (response) => {
            
-            this.allPhysicians = response.data;
-            this.totalItems = response.totalRecords; 
-            console.log('Loaded Physicians:', this.allPhysicians);
-            this.applyFilters();
-             this.ctr.detectChanges();
+            ts.allPhysicians = response.data;
+            ts.filteredPhysicians = [...this.allPhysicians]; 
+            ts.totalItems = response.totalRecords; 
+            console.log('Loaded Physicians:', ts.allPhysicians);
+            ts.ctr.detectChanges();
           },
           error: (err) => {
             console.error('Error fetching physicians', err);
           }
         });
     }
+
+    loadZips()
+    {
+      let ts=this;
+       // 1. Set up query parameters
+      const params = new HttpParams()
+        .set('searchText', '')
+        .set('pageNumber', "1")
+        .set('pageSize', '1000'); // Passing 0 to get all records as per your logic
+  
+      // 2. Call the API
+      ts.apiService.get<PagedResponse<Zips>>('Specialties/GetZips', params)
+        .subscribe({
+          next: (response) => {
+            ts.allZips = response.data;
+            ts.locations = [...new Set(this.allZips.map(p => p.code.toString()))].sort();
+            ts.ctr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error fetching physicians', err);
+          }
+        });
+    }
+
+  loadSpecialties() {
+    // 1. Set up query parameters
+    const params = new HttpParams()
+      .set('searchText', '') // Empty string if no search
+      .set('pageNumber', '1')
+      .set('pageSize', '0'); // Passing 0 to get all records as per your logic
+
+    // 2. Call the API
+    this.apiService.get<PagedResponse<Specialty>>('Specialties/GetSpecialties', params)
+      .subscribe({
+        next: (response) => {
+          // 3. Extract the array from the 'data' property of PagedResponse
+          this.allSpecialties = response.data;
+         // Initialize filteredPhysicians with allPhysicians
+          console.log('Loaded Specialties:', this.allSpecialties);
+          this.specialties = [...new Set(this.allSpecialties.map(p => p.name))].sort();
+          this.ctr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error fetching specialties', err);
+        }
+      });
+  }
 
   // Pagination Logic
 get totalPages(): number {
@@ -112,87 +197,75 @@ goToLast() {
   }
 }  
 
-  extractFilterOptions(): void {
-    // Extract unique specialties
-    this.specialties = [...new Set(this.allPhysicians.map(p => p.specialty))].sort();
-    
-    // Extract unique locations/cities
-    this.locations = [...new Set(this.allPhysicians.map(p => p.city))].sort();
-  }
-
-  applyFilters(): void {
-    let filtered = [...this.allPhysicians];
-    debugger;
-    // Search query
-    if (this.filters.searchQuery?.trim()) {
-      const query = this.filters.searchQuery.toLowerCase();
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(query) ||
-        p.specialty.toLowerCase().includes(query) ||
-        p.location.toLowerCase().includes(query) ||
-        p.bio.toLowerCase().includes(query)
-      );
-    }
-
-    // Specialty filter
-    if (this.filters.specialty) {
-      filtered = filtered.filter(p => p.specialty === this.filters.specialty);
-    }
-
-    // Location filter
-    if (this.filters.location) {
-      filtered = filtered.filter(p => p.city === this.filters.location);
-    }
-
-    // Rating filter
-    if (this.filters.minRating && this.filters.minRating > 0) {
-      filtered = filtered.filter(p => p.rating >= this.filters.minRating!);
-    }
-
-    // Distance filter
-    // if (this.filters.distance) {
-    //   filtered = filtered.filter(p => p.distance <= this.filters.distance!);
+applyFilters(): void {
+   
+    this.loadPhysicians(this.currentPage); // Reload physicians based on current filters and page
+    // ;
+    // // Search query
+    // if (this.filters.searchQuery?.trim()) {
+    //   const query = this.filters.searchQuery.toLowerCase();
+     
     // }
 
-    // Available only
-    if (this.filters.availableOnly) {
-      filtered = filtered.filter(p => p.availableSlots > 0);
-    }
+    // // Specialty filter
+    // if (this.filters.specialty) {
+    //   filtered = filtered.filter(p => p.specialty === this.filters.specialty);
+    // }
 
-    // Verified only
-    if (this.filters.verifiedOnly) {
-      filtered = filtered.filter(p => p.verified);
-    }
+    // // Location filter
+    // // if (this.filters.location) {
+    // //   filtered = filtered.filter(p => p.city === this.filters.location);
+    // // }
 
-    // Insurance filter
-    if (this.filters.acceptsInsurance) {
-      filtered = filtered.filter(p => p.acceptsInsurance);
-    }
+    // // Rating filter
+    // // if (this.filters.minRating && this.filters.minRating > 0) {
+    // //   filtered = filtered.filter(p => p.rating >= this.filters.minRating!);
+    // // }
 
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let compareValue = 0;
+    // // Distance filter
+    // // if (this.filters.distance) {
+    // //   filtered = filtered.filter(p => p.distance <= this.filters.distance!);
+    // // }
 
-      switch (this.sortBy.by) {
-        case 'rating':
-          compareValue = b.rating - a.rating;
-          break;
-        case 'distance':
-          compareValue = a.distance - b.distance;
-          break;
-        case 'experience':
-          compareValue = b.experience - a.experience;
-          break;
-        case 'reviews':
-          compareValue = b.reviewCount - a.reviewCount;
-          break;
-      }
+    // // Available only
+    // if (this.filters.availableOnly) {
+    //   filtered = filtered.filter(p => p.availableSlots > 0);
+    // }
 
-      return this.sortBy.order === 'asc' ? compareValue : -compareValue;
-    });
+    // // Verified only
+    // if (this.filters.verifiedOnly) {
+    //   filtered = filtered.filter(p => p.verified);
+    // }
 
-    this.filteredPhysicians = filtered;
-      console.log('Loaded Filter Physicians:', this.filteredPhysicians);
+    // // Insurance filter
+    // if (this.filters.acceptsInsurance) {
+    //   filtered = filtered.filter(p => p.acceptsInsurance);
+    // }
+
+    // // Apply sorting
+    // filtered.sort((a, b) => {
+    //   let compareValue = 0;
+
+    //   switch (this.sortBy.by) {
+    //     case 'rating':
+    //       compareValue = b.rating - a.rating;
+    //       break;
+    //     case 'distance':
+    //       compareValue = a.distance - b.distance;
+    //       break;
+    //     case 'experience':
+    //       compareValue = b.experience - a.experience;
+    //       break;
+    //     case 'reviews':
+    //       compareValue = b.reviewCount - a.reviewCount;
+    //       break;
+    //   }
+
+    //   return this.sortBy.order === 'asc' ? compareValue : -compareValue;
+    // });
+
+    // this.filteredPhysicians = filtered;
+    //   console.log('Loaded Filter Physicians:', this.filteredPhysicians);
   }
 
   onFilterChange(): void {

@@ -37,3 +37,13 @@ export interface PhysicianSort {
   by: 'rating' | 'distance' | 'experience' | 'reviews';
   order: 'asc' | 'desc';
 }
+
+export interface ReviewModal {
+  id: number;
+  placeId: number;
+  author: string;
+  text: string;
+  rating: number;
+  /** Represented as an ISO string (YYYY-MM-DD) */
+  date: string; 
+}

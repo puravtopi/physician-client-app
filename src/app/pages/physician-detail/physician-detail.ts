@@ -55,6 +55,7 @@ export class PhysicianDetail implements OnInit {
       // Call your API method
       ts.saveLeads(id);
       ts.getPhysicianById(id);
+      ts.loadReviews(id);
     }
   });
   }
@@ -94,6 +95,32 @@ export class PhysicianDetail implements OnInit {
       },
     ];
   }
+
+   loadReviews(id:number): void {
+  
+        let ts=this;
+       
+        
+        debugger;
+        // 1. Set up query parameters
+        const params = new HttpParams()
+          .set('id', id)
+          .set('pageNumber', 1)
+          .set('pageSize', 5); // Passing 0 to get all records as per your logic
+    
+        // 2. Call the API
+        ts.apiService.get<PagedResponse<Review>>('Physio/GetPhysiciansReviews', params)
+          .subscribe({
+            next: (response) => {
+             
+              ts.reviews = response.data;
+              ts.ctr.detectChanges();
+            },
+            error: (err) => {
+              console.error('Error fetching physicians', err);
+            }
+          });
+      }
 
   private buildReviews(physician: Physician): Review[] {
     return [

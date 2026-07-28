@@ -597,7 +597,7 @@ body {
 
 .physician-card p {
   color: var(--text-light);
-  padding: 0.5rem 2rem;
+  /* padding: 0.5rem 2rem; */
   font-size: 0.9rem;
 }
 

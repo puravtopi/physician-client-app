@@ -21,7 +21,7 @@
       <div class="hero-info">
         <div class="hero-badges">
           <span class="badge verified" *ngIf="physician.verified">✓ Verified Provider</span>
-          <span class="badge accepting">Accepting New Patients</span>
+          <!-- <span class="badge accepting">Accepting New Patients</span> -->
         </div>
         <h1>{{ physician.name }}</h1>
         <p class="credential">{{ physician.specialty }}</p>
@@ -47,7 +47,7 @@
         <div class="highlights">
           <div class="highlight-item">
             <span class="highlight-label">Experience</span>
-            <span class="highlight-value">{{ physician.experience }}+ years</span>
+            <span class="highlight-value">{{ physician.experience > 0 ? physician.experience + '+ years' : 'NA' }}</span>
           </div>
           <div class="highlight-item">
             <span class="highlight-label">Hospital</span>
@@ -55,7 +55,9 @@
           </div>
           <div class="highlight-item">
             <span class="highlight-label">Languages</span>
-            <span class="highlight-value">{{ physician?.languages.join(', ') }}</span>
+            <span class="highlight-value">
+              <!-- {{ physician?.languages.join(', ') }} -->
+            </span>
           </div>
           <div class="highlight-item">
             <span class="highlight-label">Insurance</span>
@@ -67,7 +69,7 @@
       </section>
 
       <!-- Practice Locations -->
-      <section class="detail-card">
+      <section class="detail-card" style="display:none">
         <h2>Practice Locations</h2>
         <div class="location-list">
           <article class="location-item" *ngFor="let location of practiceLocations">
@@ -129,10 +131,10 @@
             <span class="contact-label">Phone</span>
             <a [href]="'tel:' + physician.phone">{{ physician.phone }}</a>
           </li>
-          <li *ngIf="physician.email">
+          <!-- <li *ngIf="physician.email">
             <span class="contact-label">Email</span>
             <a [href]="'mailto:' + physician.email">{{ physician.email }}</a>
-          </li>
+          </li> -->
           <li>
             <span class="contact-label">Address</span>
             <span>{{ fullAddress }}</span>
@@ -140,7 +142,7 @@
         </ul>
       </div>
 
-      <div class="sidebar-card">
+      <div class="sidebar-card" style="display:none">
         <h3>Quick Facts</h3>
         <ul class="facts-list">
           <li><strong>Specialty:</strong> {{ physician.specialty }}</li>

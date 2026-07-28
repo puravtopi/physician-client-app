@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/c9dba4fe-a318-460b-817b-f76203027e76/resourceGroups/PhysicanBooking_Client/providers/Microsoft.Web/sites/Physician-Booking-Client",
+    "appService.deploySubpath": "dist\\physician-client-app\\browser"
+}

@@ -1,6 +1,6 @@
 <div class="physicians-container">
   <!-- Search Bar -->
-  <div class="search-section">
+  <div class="search-section" style="display:none">
     <div class="search-wrapper">
       <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
         <circle cx="11" cy="11" r="8"></circle>
@@ -33,7 +33,7 @@
         <input
           type="text"
           class="filter-input"
-          placeholder="Doctor name, specialty..."
+          placeholder="Name, specialty..."
           [(ngModel)]="filters.searchQuery"
           (input)="onFilterChange()"
         />
@@ -70,7 +70,7 @@
       </div>
 
       <!-- Distance Filter -->
-      <div class="filter-group">
+      <div class="filter-group" style="display:none">
         <label class="filter-label">Distance</label>
         <div class="distance-slider">
           <input
@@ -101,7 +101,7 @@
       </div>
 
       <!-- Checkboxes -->
-      <div class="filter-group">
+      <div class="filter-group" style="display:none">
         <label class="checkbox-label">
           <input
             type="checkbox"
@@ -112,7 +112,7 @@
         </label>
       </div>
 
-      <div class="filter-group">
+      <div class="filter-group" style="display:none">
         <label class="checkbox-label">
           <input
             type="checkbox"
@@ -123,7 +123,7 @@
         </label>
       </div>
 
-      <div class="filter-group">
+      <div class="filter-group" style="display:none">
         <label class="checkbox-label">
           <input
             type="checkbox"
@@ -135,7 +135,7 @@
       </div>
 
       <!-- Sort -->
-      <div class="filter-group">
+      <div class="filter-group" style="display:none">
         <label class="filter-label">Sort By</label>
         <select
           class="filter-select"
@@ -154,9 +154,9 @@
     <main class="physicians-list">
       <!-- Results Header -->
       <div class="results-header">
-        <h2>Available Physicians</h2>
+        <h2>Available Professionals</h2>
         <p class="results-count">
-          {{ filteredPhysicians.length }} physician{{ filteredPhysicians.length !== 1 ? 's' : '' }} found
+          {{ filteredPhysicians.length }} professional{{ filteredPhysicians.length !== 1 ? 's' : '' }} found
         </p>
       </div>
 
@@ -191,15 +191,16 @@
                 {{ star }}
               </span>
               <span class="rating-value">{{ physician.rating }}</span>
+               <p class="review-count">({{ physician.reviewCount }} reviews)</p>
             </div>
-            <p class="review-count">({{ physician.reviewCount }} reviews)</p>
+              <p class="review-count"> 📍 {{ physician.location }}</p>
           </div>
 
           <!-- Bio -->
           <p class="physician-bio">{{ physician.bio }}</p>
 
           <!-- Details Grid -->
-          <div class="details-grid">
+          <div class="details-grid" style="display:none">
             <div class="detail-item">
               <span class="detail-label">Experience:</span>
               <span class="detail-value">{{ physician.experience }}+ years</span>
