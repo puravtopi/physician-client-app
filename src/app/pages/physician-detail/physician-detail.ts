@@ -83,7 +83,7 @@ export class PhysicianDetail implements OnInit {
       return '';
     }
 
-    return `${this.physician.location}, ${this.physician.city}, ${this.physician.state} ${this.physician.zipCode}`;
+    return `${this.physician.location}`;
   }
 
   private buildPracticeLocations(physician: Physician): PracticeLocation[] {
