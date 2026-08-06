@@ -1,7 +1,7 @@
-import { Component,OnInit  } from '@angular/core';
+import { Component,OnInit,ChangeDetectorRef,inject  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router,RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.services'; // Adjust path
 import { Specialty } from '../../core/models/specialties.modal'; // Adjust path
 import { PagedResponse } from '../../core/models/api-response.model'; // Adjust path
@@ -17,18 +17,25 @@ interface SpecialtyOption {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   specialtyQuery = '';
   zipCode = '';
   showSuggestions = false;
   activeSuggestionIndex = -1;
   filteredSpecialties: SpecialtyOption[] = [];
 
-  constructor(private router: Router,private apiService: ApiService) {
+  
+  private ctr = inject(ChangeDetectorRef);
+
+  constructor(private router: Router,
+    
+     private apiService: ApiService) {}
+
+  ngOnInit(): void {
     this.loadSpecialties();
     this.loadPhysicians();
   }
@@ -53,55 +60,7 @@ export class HomeComponent {
   specialties: Specialty[] = [];
   physicians: Physician[] = [];
 
-  /*specialties = [
-    { name: 'Cardiology', icon: '❤️', description: 'Heart & Cardiovascular Health' },
-    { name: 'Dermatology', icon: '🧴', description: 'Skin Care Specialists' },
-    { name: 'Neurology', icon: '🧠', description: 'Neurological Conditions' },
-    { name: 'Orthopedics', icon: '🦴', description: 'Bone & Joint Health' },
-    { name: 'Pediatrics', icon: '👶', description: 'Children\'s Health Care' },
-    { name: 'General Medicine', icon: '⚕️', description: 'Primary Care Physicians' },
-    { name: 'Psychiatry', icon: '💭', description: 'Mental Health Services' },
-    { name: 'Ophthalmology', icon: '👁️', description: 'Eye Care Specialists' },
-    { name: 'Gynecology', icon: '👩‍⚕️', description: 'Women\'s Health' },
-    { name: 'Urology', icon: '🔬', description: 'Urological Health' },
-    { name: 'ENT', icon: '👂', description: 'Ear, Nose & Throat' },
-    { name: 'Gastroenterology', icon: '🍽️', description: 'Digestive Health' }
-  ];*/
 
-  // physicians = [
-  //   {
-  //     name: 'Dr. Sarah Johnson',
-  //     specialty: 'Cardiology',
-  //     location: 'New York, NY',
-  //     rating: 4.9,
-  //     reviews: 248,
-  //     image: '👩‍⚕️'
-  //   },
-  //   {
-  //     name: 'Dr. Michael Chen',
-  //     specialty: 'Orthopedics',
-  //     location: 'Los Angeles, CA',
-  //     rating: 4.8,
-  //     reviews: 312,
-  //     image: '👨‍⚕️'
-  //   },
-  //   {
-  //     name: 'Dr. Emily Rodriguez',
-  //     specialty: 'Neurology',
-  //     location: 'Chicago, IL',
-  //     rating: 4.9,
-  //     reviews: 189,
-  //     image: '👩‍⚕️'
-  //   },
-  //   {
-  //     name: 'Dr. James Wilson',
-  //     specialty: 'General Medicine',
-  //     location: 'Houston, TX',
-  //     rating: 4.7,
-  //     reviews: 425,
-  //     image: '👨‍⚕️'
-  //   }
-  // ];
 
   articles = [
     {
@@ -150,12 +109,17 @@ export class HomeComponent {
     this.apiService.get<PagedResponse<Specialty>>('Specialties/GetSpecialties', params)
       .subscribe({
         next: (response) => {
+          debugger;
+          console.log('API Response:', response);
           // 3. Extract the array from the 'data' property of PagedResponse
-          this.specialties = response.data;
+          this.specialties = response.data || [];
+          this.filteredSpecialties = [...this.specialties];
+          this.ctr.detectChanges();
           console.log('Loaded Specialties:', this.specialties);
         },
         error: (err) => {
-          console.error('Error fetching specialties', err);
+          console.error('Error fetching specialties:', err);
+          console.error('Error details:', err.message, err.status, err.statusText);
         }
       });
   }
@@ -165,19 +129,22 @@ export class HomeComponent {
     const params = new HttpParams()
       .set('searchText', '') // Empty string if no search
       .set('pageNumber', '1')
-      .set('pageSize', '10'); // Passing 0 to get all records as per your logic
+      .set('pageSize', '6'); // Passing 0 to get all records as per your logic
 
     // 2. Call the API
     this.apiService.get<PagedResponse<Physician>>('Physio/GetPhysicians', params)
       .subscribe({
         next: (response) => {
-          // 3. Extract the array from the 'data' property of PagedResponse
           debugger;
-          this.physicians = response.data;
+          console.log('Physicians API Response:', response);
+          // 3. Extract the array from the 'data' property of PagedResponse
+          this.physicians = response.data || [];
+          this.ctr.detectChanges();
           console.log('Loaded Physicians:', this.physicians);
         },
         error: (err) => {
-          console.error('Error fetching physicians', err);
+          console.error('Error fetching physicians:', err);
+          console.error('Physicians Error details:', err.message, err.status, err.statusText);
         }
       });
   }
@@ -255,6 +222,14 @@ export class HomeComponent {
       queryParams: {
         specialty: this.specialtyQuery.trim(),
         zipCode: this.zipCode
+      }
+    });
+  }
+
+  findProfessional(specialtyName: string): void {
+    this.router.navigate(['/physicians'], {
+      queryParams: {
+        specialty: specialtyName?.trim() || ''
       }
     });
   }

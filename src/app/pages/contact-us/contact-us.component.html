@@ -1,0 +1,69 @@
+<section class="contact-page">
+  <div class="page-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Contact us</p>
+      <h1>We’re here to help you grow.</h1>
+      <p class="hero-text">
+        Reach out for questions about services, partnerships, or how PhysicianBook can support your practice.
+      </p>
+      <a class="hero-link" routerLink="/physicians">Explore professionals</a>
+    </div>
+  </div>
+
+  <div class="contact-grid">
+    <article class="info-card">
+      <h2>Visit or connect</h2>
+      <p>
+        We’d love to hear from you. Whether you are a patient, provider, or business partner, our team is ready to assist.
+      </p>
+
+      <div class="contact-item">
+        <h3>Address</h3>
+        <p>123 Main Street<br />Suite 400<br />New York, NY 10001</p>
+      </div>
+
+      <div class="contact-item">
+        <h3>Email</h3>
+        <p><a href="mailto:contact@appointmentbk.com">contact@appointmentbk.com</a></p>
+      </div>
+
+      <div class="contact-item">
+        <h3>Phone</h3>
+        <p><a href="tel:+12125550199">+1 (212) 555-0199</a></p>
+      </div>
+    </article>
+
+    <article class="form-card">
+      <h2>Send us an inquiry</h2>
+      <form (ngSubmit)="submitForm()" #contactForm="ngForm" novalidate>
+        <label>
+          <span>Name</span>
+          <input type="text" name="name" [(ngModel)]="inquiry.name" required />
+        </label>
+
+        <label>
+          <span>Email</span>
+          <input type="email" name="email" [(ngModel)]="inquiry.email" required />
+        </label>
+
+        <label>
+          <span>Phone</span>
+          <input type="tel" name="phone" [(ngModel)]="inquiry.phone" />
+        </label>
+
+        <label>
+          <span>How can we help?</span>
+          <textarea name="message" rows="5" [(ngModel)]="inquiry.message" required></textarea>
+        </label>
+
+        <button type="submit" class="btn-primary" [disabled]="contactForm.invalid">
+          Send inquiry
+        </button>
+      </form>
+
+      <p class="form-note" *ngIf="isSubmitted">
+        Your inquiry is ready to be sent through your email app.
+      </p>
+    </article>
+  </div>
+</section>

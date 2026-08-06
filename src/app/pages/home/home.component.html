@@ -83,12 +83,12 @@
   <section class="stats">
     <div class="stat-item">
       <div class="stat-number">50K+</div>
-      <p>Physicians</p>
+      <p>Professionals</p>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
       <div class="stat-number">500K+</div>
-      <p>Happy Patients</p>
+      <p>Happy Users</p>
     </div>
     <div class="stat-divider"></div>
     <div class="stat-item">
@@ -101,7 +101,7 @@
   <section class="features" id="features">
     <div class="section-header">
       <h2>Why Choose Us</h2>
-      <p>The easiest way to find and book with healthcare professionals</p>
+      <p>The easiest way to find and book with professionals</p>
     </div>
     <div class="features-grid">
       <div class="feature-card" *ngFor="let feature of features">
@@ -115,7 +115,7 @@
   <!-- Testimonials Section -->
   <section class="testimonials">
     <div class="section-header">
-      <h2>What Peoples Say</h2>
+      <h2>What Peoples are saying</h2>
     </div>
     <div class="testimonials-grid">
       <div class="testimonial-card" *ngFor="let testimonial of testimonials">
@@ -139,7 +139,12 @@
         <div class="specialty-icon">{{ specialty.icon ? specialty.icon : '⚕️' }}</div>
         <h4>{{ specialty.name }}</h4>
         <p>{{ specialty.description }}</p>
-        <a href="#" class="specialty-link">Find Physicians →</a>
+        <button 
+          type="button"
+          (click)="findProfessional(specialty.name)" 
+          class="specialty-link">
+          Find Professionals →
+        </button>
       </div>
     </div>
   </section>
@@ -162,7 +167,13 @@
           </span>
           <span class="reviews">{{ physician.rating }} ({{ physician.reviewCount }} reviews)</span>
         </div>
-        <button class="btn-book">Book Appointment</button>
+       <a
+              class="btn-book"
+              [routerLink]="['/physicians', physician.id]" 
+              title="View details"
+            >
+               Details
+            </a>
       </div>
     </div>
   </section>
@@ -188,7 +199,7 @@
     <div class="cta-content">
       <h2>Ready to Find Your Perfect Professional?</h2>
       <p>Join thousands of customers who trust our platform to find quality services</p>
-      <button class="btn-cta">Start Your Search Now</button>
+      <button routerLink="/physicians" class="btn-cta">Start Your Search Now</button>
     </div>
   </section>
 

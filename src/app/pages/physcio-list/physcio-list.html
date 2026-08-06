@@ -156,99 +156,96 @@
       <div class="results-header">
         <h2>Available Professionals</h2>
         <p class="results-count">
-          {{ filteredPhysicians.length }} professional{{ filteredPhysicians.length !== 1 ? 's' : '' }} found
+          {{ totalItems }} professional{{ totalItems !== 1 ? 's' : '' }} found
         </p>
       </div>
 
-      <!-- No Results -->
-      <div *ngIf="filteredPhysicians.length === 0" class="no-results">
-        <div class="no-results-icon">🔍</div>
-        <h3>No Physicians Found</h3>
-        <p>Try adjusting your filters to see more results.</p>
-        <button class="btn-clear-filters" (click)="clearFilters()">Clear Filters</button>
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-state">
+        <div class="loader-card">
+          <div class="spinner"></div>
+          <div>
+            <h3>Loading professionals</h3>
+            <p>Please wait while we find the best matches for your search.</p>
+          </div>
+        </div>
+        <div class="loader-grid">
+          <div class="loader-skeleton-card" *ngFor="let item of [1,2,3,4,5,6]">
+            <div class="skeleton-image shimmer"></div>
+            <div class="skeleton-line shimmer short"></div>
+            <div class="skeleton-line shimmer"></div>
+            <div class="skeleton-line shimmer"></div>
+          </div>
+        </div>
       </div>
 
-      <!-- Physicians Grid -->
-      <div class="physicians-grid">
-        <article class="physician-card" *ngFor="let physician of filteredPhysicians">
-          <!-- Card Header -->
-          <div class="card-header">
-            <div class="physician-image">{{ physician.image }}</div>
-            <div class="physician-info-header">
-              <h3 class="physician-name">{{ physician.name }}</h3>
-              <p class="physician-specialty">{{ physician.specialty }}</p>
-              <div class="physician-meta">
-                <span class="verified-badge" *ngIf="physician.verified">✓ Verified</span>
-                <!-- <span class="distance">📍 {{ physician.distance }} km away</span> -->
+      <div class="results-wrapper" *ngIf="!isLoading">
+        <!-- No Results -->
+        <div *ngIf="filteredPhysicians.length === 0" class="no-results">
+          <div class="no-results-icon">🔍</div>
+          <h3>No Professional Found</h3>
+          <p>Try adjusting your filters to see more results.</p>
+          <button class="btn-clear-filters" (click)="clearFilters()">Clear Filters</button>
+        </div>
+
+        <!-- Physicians Grid -->
+        <div class="physicians-grid">
+          <article class="physician-card" *ngFor="let physician of filteredPhysicians">
+            <div class="card-top">
+              <div class="physician-avatar">{{ physician.image || '👤' }}</div>
+              <div class="physician-main">
+                <div class="physician-headline">
+                  <h3 class="physician-name">{{ physician.name || 'Professional Name' }}</h3>
+                  <span class="physician-specialty">{{ physician.specialty || 'Specialty not listed' }}</span>
+                </div>
+                <div class="physician-detail-row">
+                  <span class="physician-location">📍 {{ physician.location || 'Location not available' }}</span>
+                  <span class="verified-badge" *ngIf="physician.verified">Verified</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Rating -->
-          <div class="rating-section">
-            <div class="rating-stars">
-              <span *ngFor="let star of getRatingStars(physician.rating)" class="star">
-                {{ star }}
-              </span>
-              <span class="rating-value">{{ physician.rating }}</span>
-               <p class="review-count">({{ physician.reviewCount }} reviews)</p>
+            <div class="rating-row">
+              <div class="rating-stars">
+                <span *ngFor="let star of getRatingStars(physician.rating)" class="star">{{ star }}</span>
+              </div>
+              <div class="rating-summary">
+                <span class="rating-value">{{ physician.rating || 0 }}</span>
+                <span class="review-count">({{ physician.reviewCount || 0 }} reviews)</span>
+              </div>
             </div>
-              <p class="review-count"> 📍 {{ physician.location }}</p>
-          </div>
 
-          <!-- Bio -->
-          <p class="physician-bio">{{ physician.bio }}</p>
+            <p class="physician-bio">{{ physician.bio || 'This professional has not added a description yet.' }}</p>
 
-          <!-- Details Grid -->
-          <div class="details-grid" style="display:none">
-            <div class="detail-item">
-              <span class="detail-label">Experience:</span>
-              <span class="detail-value">{{ physician.experience }}+ years</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Hospital:</span>
-              <span class="detail-value">{{ physician.hospital }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Languages:</span>
-              <span class="detail-value">{{ physician.languages?.join(', ') }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="detail-label">Insurance:</span>
-              <span class="detail-value" [class.accepts]="physician.acceptsInsurance">
-                {{ physician.acceptsInsurance ? '✓ Accepted' : '✗ Not Accepted' }}
-              </span>
-            </div>
-          </div>
+            <!-- <div class="info-grid" *ngIf="physician.experience || physician.hospital || physician.languages?.length || physician.acceptsInsurance !== undefined">
+              <div class="info-card" *ngIf="physician.experience">
+                <span class="info-label">Experience</span>
+                <span class="info-value">{{ physician.experience }}+ years</span>
+              </div>
+              <div class="info-card" *ngIf="physician.hospital">
+                <span class="info-label">Hospital</span>
+                <span class="info-value">{{ physician.hospital }}</span>
+              </div>
+              <div class="info-card" *ngIf="physician.languages?.length">
+                <span class="info-label">Languages</span>
+                <span class="info-value">{{ physician.languages.join(', ') }}</span>
+              </div>
+              <div class="info-card">
+                <span class="info-label">Insurance</span>
+                <span class="info-value">{{ physician.acceptsInsurance ? 'Accepted' : 'Not Listed' }}</span>
+              </div>
+            </div> -->
 
-          <!-- Available Slots -->
-          <div class="availability" style="display: none;">
-            <span class="availability-label">Available Slots:</span>
-            <span class="availability-count" [class.available]="physician.availableSlots > 0">
-              {{ physician.availableSlots }} {{ physician.availableSlots === 1 ? 'slot' : 'slots' }}
-            </span>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="card-actions">
-            <button class="btn-secondary" title="Call physician" style="display: none;">
-              📞 Call
-            </button>
-            <button class="btn-secondary" title="View details" style="display: none;">
-              ℹ️ Details
-            </button>
-            <a
-              class="btn-primary btn-details"
-              [routerLink]="['/physicians', physician.id]" 
-              title="View details"
-            >
-              ℹ️ Details
-            </a>
-          </div>
-        </article>
+            <div class="card-actions">
+              <a class="btn-primary btn-details" [routerLink]="['/physicians', physician.id]" title="View details">
+                View Details
+              </a>
+            </div>
+          </article>
       </div>
           <!-- Pagination UI -->
-  <div class="pagination-wrapper" *ngIf="totalItems > 0">
+  </div>
+  <div class="pagination-wrapper" *ngIf="!isLoading && totalItems > 0">
     <div class="pagination-controls">
       <!-- First Page -->
       <button 

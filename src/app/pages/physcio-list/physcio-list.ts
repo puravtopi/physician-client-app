@@ -2,6 +2,7 @@ import { Component, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { finalize } from 'rxjs/operators';
 import { Physician, PhysicianFilter, PhysicianSort } from '../../core/models/physician.model';
 import { ApiService } from '../../core/services/api.services'; // Adjust path
 import { Specialty } from '../../core/models/specialties.modal'; // Adjust path
@@ -47,6 +48,7 @@ export class PhyscioList implements OnInit {
 
   // UI State
   sidebarOpen = true;
+  isLoading = false;
   specialties: string[] = [];
   locations: string[] = [];
   minRatingOptions = [3.5, 4.0, 4.5];
@@ -97,7 +99,6 @@ export class PhyscioList implements OnInit {
       let minRating= this.filters.minRating??0;
       ts.currentPage = page;
       
-      debugger;
       // 1. Set up query parameters
       const params = new HttpParams()
         .set('category', category)
@@ -107,15 +108,22 @@ export class PhyscioList implements OnInit {
         .set('pageSize', this.pageSize.toString()); // Passing 0 to get all records as per your logic
   
       // 2. Call the API
+      ts.isLoading = true;
+      ts.ctr.detectChanges();
       ts.apiService.get<PagedResponse<Physician>>('Physio/GetPhysicians', params)
+        .pipe(
+          finalize(() => {
+            ts.isLoading = false;
+            ts.ctr.detectChanges();
+          })
+        )
         .subscribe({
           next: (response) => {
-           
             ts.allPhysicians = response.data;
             ts.filteredPhysicians = [...this.allPhysicians]; 
             ts.totalItems = response.totalRecords; 
-            console.log('Loaded Physicians:', ts.allPhysicians);
-            ts.ctr.detectChanges();
+             ts.ctr.detectChanges();
+            console.log('Loaded Professionals:', ts.allPhysicians);
           },
           error: (err) => {
             console.error('Error fetching physicians', err);
@@ -199,7 +207,7 @@ goToLast() {
 
 applyFilters(): void {
    
-    this.loadPhysicians(this.currentPage); // Reload physicians based on current filters and page
+    this.loadPhysicians(1); // Reload physicians based on current filters and page
     // ;
     // // Search query
     // if (this.filters.searchQuery?.trim()) {

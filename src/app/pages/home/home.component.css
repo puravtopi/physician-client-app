@@ -188,7 +188,7 @@ body {
     
     color: var(--white);
     text-align: center;
-    overflow: hidden;
+    overflow: visible;
     min-height: 600px; /* Adjust this if you want the hero taller/shorter */
     display: flex;
     align-items: center;
@@ -209,7 +209,7 @@ body {
 
 .hero-content {
   position: relative;
-  z-index: 1;
+  z-index: 20;
   max-width: 860px;
   margin: 0 auto;
 }
@@ -350,7 +350,7 @@ body {
   list-style: none;
   max-height: 240px;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 1000;
   padding: 0.35rem;
 }
 
@@ -664,6 +664,11 @@ body {
   font-size: 0.9rem;
   transition: var(--transition);
   display: inline-block;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
 }
 
 .specialty-link:hover {
@@ -758,6 +763,7 @@ body {
   letter-spacing: 0.5px;
   display: inline-block;
   text-decoration: none;
+  text-align: center;
   /* margin: 1rem 2rem 2rem; */
 }
 

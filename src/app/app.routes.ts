@@ -25,6 +25,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/physician-detail/physician-detail')
             .then(m => m.PhysicianDetail)
+      },
+      {
+        path: 'vision',
+        loadComponent: () =>
+          import('./pages/vision/vision.component')
+            .then(m => m.VisionComponent)
+      },
+      {
+        path: 'contact-us',
+        loadComponent: () =>
+          import('./pages/contact-us/contact-us.component')
+            .then(m => m.ContactUsComponent)
       }]
   }
 ];
