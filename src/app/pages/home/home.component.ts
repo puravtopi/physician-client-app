@@ -1,7 +1,7 @@
-import { Component,OnInit,ChangeDetectorRef,inject  } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router,RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/services/api.services'; // Adjust path
 import { Specialty } from '../../core/models/specialties.modal'; // Adjust path
 import { PagedResponse } from '../../core/models/api-response.model'; // Adjust path
@@ -21,7 +21,7 @@ interface SpecialtyOption {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   specialtyQuery = '';
   zipCode = '';
   showSuggestions = false;
@@ -38,6 +38,25 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.loadSpecialties();
     this.loadPhysicians();
+  }
+
+  ngOnDestroy(): void {
+    // Cleanup hosts if necessary in the future, Angular HostListener handles event binding.
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const wrapper = document.getElementById('specialty-autocomplete-wrapper');
+
+    if (!wrapper) {
+      return;
+    }
+
+    if (!wrapper.contains(target) && this.showSuggestions) {
+      this.showSuggestions = false;
+      this.activeSuggestionIndex = -1;
+    }
   }
   features = [
     {

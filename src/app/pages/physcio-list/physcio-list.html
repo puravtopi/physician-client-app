@@ -24,7 +24,7 @@
     <aside class="filters-sidebar" [class.open]="sidebarOpen">
       <div class="filters-header">
         <h3>Filters</h3>
-        <button class="btn-clear-filters" (click)="clearFilters()">Clear All</button>
+        <button *ngIf="hasSearchStarted" class="btn-clear-filters" (click)="clearFilters()">Clear All</button>
       </div>
 
       <!-- Search Filter -->
@@ -183,9 +183,11 @@
         <!-- No Results -->
         <div *ngIf="filteredPhysicians.length === 0" class="no-results">
           <div class="no-results-icon">🔍</div>
-          <h3>No Professional Found</h3>
-          <p>Try adjusting your filters to see more results.</p>
-          <button class="btn-clear-filters" (click)="clearFilters()">Clear Filters</button>
+          <h3 *ngIf="hasSearchStarted">No Professional Found</h3>
+          <h3 *ngIf="!hasSearchStarted">Start Finding Professionals</h3>
+          <p *ngIf="hasSearchStarted">Try adjusting your filters to see more results.</p>
+          <p *ngIf="!hasSearchStarted">Use the search or filters to begin your professional search.</p>
+          <button *ngIf="hasSearchStarted" class="btn-clear-filters" (click)="clearFilters()">Clear Filters</button>
         </div>
 
         <!-- Physicians Grid -->
