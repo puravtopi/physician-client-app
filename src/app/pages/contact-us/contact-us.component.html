@@ -48,12 +48,12 @@
 
         <label>
           <span>Phone</span>
-          <input type="tel" name="phone" [(ngModel)]="inquiry.phone" />
+          <input type="text" name="phone" [(ngModel)]="inquiry.phone" />
         </label>
 
         <label>
           <span>How can we help?</span>
-          <textarea name="message" rows="5" [(ngModel)]="inquiry.message" required></textarea>
+          <textarea name="note" rows="5" [(ngModel)]="inquiry.note" required></textarea>
         </label>
 
         <button type="submit" class="btn-primary" [disabled]="contactForm.invalid">

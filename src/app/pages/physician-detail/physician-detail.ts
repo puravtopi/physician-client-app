@@ -33,6 +33,7 @@ interface PracticeLocation {
 export class PhysicianDetail implements OnInit {
   physician: Physician | null = null;
   reviews: Review[] = [];
+  workingHours: string[] = [];
   practiceLocations: PracticeLocation[] = [];
 
   constructor(private route: ActivatedRoute,private ipService: IpService,
@@ -56,6 +57,7 @@ export class PhysicianDetail implements OnInit {
       ts.saveLeads(id);
       ts.getPhysicianById(id);
       ts.loadReviews(id);
+      ts.loadWorkingHours(id);
     }
   });
   }
@@ -84,6 +86,43 @@ export class PhysicianDetail implements OnInit {
     }
 
     return `${this.physician.location}`;
+  }
+
+  loadWorkingHours(id:number): void {
+       
+        let ts=this;
+               
+        debugger;
+        // 1. Set up query parameters
+        const params = new HttpParams()
+          .set('id', id.toString());
+        
+    
+        // 2. Call the API
+        ts.apiService.get<string[]>('Physio/GetPhysiciansWorkingHours', params)
+          .subscribe({
+            next: (response: string[]) => {
+              debugger
+              ts.workingHours = response;
+              ts.ctr.detectChanges();
+            },
+            error: (err) => {
+              console.error('Error fetching physicians', err);
+            }
+          });
+    
+
+   
+  }
+
+  get websiteUrl(): string {
+    const site = this.physician?.website?.trim();
+
+    if (!site) {
+      return 'NA';
+    }
+
+    return /^https?:\/\//i.test(site) ? site : `https://${site}`;
   }
 
   private buildPracticeLocations(physician: Physician): PracticeLocation[] {

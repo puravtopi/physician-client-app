@@ -56,6 +56,35 @@
 
       <!-- Location Filter -->
       <div class="filter-group">
+        <label class="filter-label">City</label>
+        <select
+          class="filter-select"
+          [(ngModel)]="filters.city"
+          (change)="onFilterChange()"
+        >
+          <option value="">All Cities</option>
+          <option *ngFor="let city of allCities" [value]="city">
+            {{ city }}
+          </option>
+        </select>
+      </div>
+ <!-- Location Filter -->
+      <div class="filter-group">
+        <label class="filter-label">State</label>
+        <select
+          class="filter-select"
+          [(ngModel)]="filters.state"
+          (change)="onFilterChange()"
+        >
+          <option value="">All States</option>
+          <option *ngFor="let state of allStates" [value]="state">
+            {{ state }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Location Filter -->
+      <div class="filter-group">
         <label class="filter-label">Location</label>
         <select
           class="filter-select"
@@ -194,7 +223,6 @@
         <div class="physicians-grid">
           <article class="physician-card" *ngFor="let physician of filteredPhysicians">
             <div class="card-top">
-              <div class="physician-avatar">{{ physician.image || '👤' }}</div>
               <div class="physician-main">
                 <div class="physician-headline">
                   <h3 class="physician-name">{{ physician.name || 'Professional Name' }}</h3>
@@ -204,6 +232,11 @@
                   <span class="physician-location">📍 {{ physician.location || 'Location not available' }}</span>
                   <span class="verified-badge" *ngIf="physician.verified">Verified</span>
                 </div>
+              </div>
+              <div class="card-actions">
+                <a class="btn-primary btn-details" [routerLink]="['/physicians', physician.id]" title="View details">
+                  View Details
+                </a>
               </div>
             </div>
 
@@ -237,12 +270,6 @@
                 <span class="info-value">{{ physician.acceptsInsurance ? 'Accepted' : 'Not Listed' }}</span>
               </div>
             </div> -->
-
-            <div class="card-actions">
-              <a class="btn-primary btn-details" [routerLink]="['/physicians', physician.id]" title="View details">
-                View Details
-              </a>
-            </div>
           </article>
       </div>
           <!-- Pagination UI -->

@@ -25,6 +25,8 @@ export class PhyscioList implements OnInit {
   totalItems: number = 0; 
   allPhysicians: Physician[] = [];  
   allZips: Zips[] = [];
+  allCities: string[] = [];
+  allStates: string[] = [];
   filteredPhysicians: Physician[] = [];
   allSpecialties: Specialty[] = [];
   
@@ -32,6 +34,8 @@ export class PhyscioList implements OnInit {
   filters: PhysicianFilter = {
     specialty: '',
     location: '',
+    city: '',
+    state: '',
     minRating: 0,
     distance: 10,
     availableOnly: false,
@@ -52,6 +56,8 @@ export class PhyscioList implements OnInit {
   hasSearchStarted = false;
   specialties: string[] = [];
   locations: string[] = [];
+  city: string[] = [];
+  state: string[] = [];
   minRatingOptions = [3.5, 4.0, 4.5];
 
   constructor(private apiService: ApiService,
@@ -60,6 +66,8 @@ export class PhyscioList implements OnInit {
   ) {
    
     this.loadZips();
+    this.loadCities();
+    this.loadStates();
     this.loadSpecialties();
 
     
@@ -73,14 +81,14 @@ export class PhyscioList implements OnInit {
         
         // 4. Handle Null vs Undefined (Fixes TS2345)
         const category = params.get('specialty') ?? undefined;
-        const zipcode = params.get('zipCode') ?? undefined;
+        const zipcode = params.get('zipCode') ?? ''
 
         console.log('Category:', category, 'Zip:', zipcode);
 
         if (category || zipcode) {
           this.hasSearchStarted = true;
           this.allPhysicians = []; 
-          this.filters.location = zipcode ?? '';
+          this.filters.location = /^\d+$/.test(zipcode) ? zipcode : '';
           this.filters.specialty = category ?? '';
           this.loadPhysicians(1);
         }
@@ -95,6 +103,8 @@ export class PhyscioList implements OnInit {
 
       let ts=this;
       let category= this.filters.specialty??'';
+      let city= this.filters.city??'';
+      let state= this.filters.state??'';
       let search= this.filters.searchQuery??'';
       let zipcode= this.filters.location??'';
       let minRating= this.filters.minRating??0;
@@ -105,6 +115,8 @@ export class PhyscioList implements OnInit {
         .set('search', search)
         .set('category', category)
         .set('zipcode', zipcode)
+        .set('city', city)
+        .set('state', state)
         .set('minRating', minRating.toString())
         .set('pageNumber', this.currentPage.toString())
         .set('pageSize', this.pageSize.toString()); // Passing 0 to get all records as per your logic
@@ -152,6 +164,52 @@ export class PhyscioList implements OnInit {
           },
           error: (err) => {
             console.error('Error fetching physicians', err);
+          }
+        });
+    }
+
+  loadCities()
+    {
+      let ts=this;
+       // 1. Set up query parameters
+      const params = new HttpParams()
+        .set('searchText', '')
+        .set('pageNumber', "1")
+        .set('pageSize', '1000'); // Passing 0 to get all records as per your logic
+  
+      // 2. Call the API
+      ts.apiService.get<PagedResponse<string>>('Specialties/GetCities', params)
+        .subscribe({
+          next: (response) => {
+            ts.allCities = response.data;
+            //ts.locations = [...new Set(this.allZips.map(p => p.code.toString()))].sort();
+            ts.ctr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error fetching physicians', err);
+          }
+        });
+    }
+
+   loadStates()
+    {
+      let ts=this;
+       // 1. Set up query parameters
+      const params = new HttpParams()
+        .set('searchText', '')
+        .set('pageNumber', "1")
+        .set('pageSize', '1000'); // Passing 0 to get all records as per your logic
+  
+      // 2. Call the API
+      ts.apiService.get<PagedResponse<string>>('Specialties/GetStates', params)
+        .subscribe({
+          next: (response) => {
+            ts.allStates = response.data;
+            //ts.locations = [...new Set(this.allZips.map(p => p.code.toString()))].sort();
+            ts.ctr.detectChanges();
+          },
+          error: (err) => {
+            console.error('Error fetching states', err);
           }
         });
     }
@@ -224,6 +282,8 @@ applyFilters(): void {
     this.filters = {
       specialty: '',
       location: '',
+      city: '',
+      state: '',
       minRating: 0,
       distance: 10,
       availableOnly: false,

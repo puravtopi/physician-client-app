@@ -409,7 +409,7 @@
 
 .physicians-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: 1fr;
   gap: 20px;
   animation: fadeIn 0.3s ease-in;
 }
@@ -435,39 +435,28 @@
 
 .physician-card {
   background: var(--white);
-  border: 1px solid rgba(212, 175, 55, 0.15);
-  border-radius: 24px;
-  padding: 26px;
+  border: 1px solid rgba(212, 175, 55, 0.06);
+  border-radius: 18px;
+  padding: 14px 16px;
   transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 12px 35px rgba(17, 24, 39, 0.08);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  box-shadow: 0 10px 20px rgba(17, 24, 39, 0.05);
 }
 
 .physician-card:hover {
-  border-color: rgba(212, 175, 55, 0.35);
-  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.12);
-  transform: translateY(-4px);
+  border-color: rgba(212, 175, 55, 0.14);
+  box-shadow: 0 12px 24px rgba(17, 24, 39, 0.08);
+  transform: translateY(-1px);
 }
 
 .card-top {
   display: flex;
-  gap: 18px;
-  align-items: center;
-  margin-bottom: 18px;
-}
-
-.physician-avatar {
-  width: 68px;
-  height: 68px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212, 175, 55, 0.16), rgba(212, 175, 55, 0.08));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  color: var(--primary-gold);
-  flex-shrink: 0;
+  justify-content: space-between;
+  align-items: center; /* vertically center header and CTA */
+  gap: 12px;
+  margin-bottom: 2px;
 }
 
 .physician-main {
@@ -485,16 +474,20 @@
   margin: 0;
   font-size: 20px;
   color: var(--text-dark);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .physician-specialty {
   margin: 0;
-  font-size: 13px;
+  display: inline-flex;
+  padding: 6px 12px;
+  background: rgba(212, 175, 55, 0.12);
   color: var(--primary-gold);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  border-radius: 999px;
+  font-size: 12px;
 }
 
 .physician-detail-row {
@@ -527,10 +520,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 10px;
-  padding: 14px 0;
-  border-top: 1px solid var(--border-light);
-  border-bottom: 1px solid var(--border-light);
-  margin-bottom: 18px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(220, 220, 220, 0.85);
+  margin-bottom: 10px;
 }
 
 .rating-stars {
@@ -581,23 +573,37 @@
 }
 
 .physician-bio {
-  margin: 0 0 22px 0;
+  margin: 0 0 10px 0;
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.5;
   color: var(--text-light);
-  min-height: 48px;
+  min-height: 0;
 }
 
 .card-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: auto;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .btn-details {
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
+  padding: 7px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  min-width: 96px;
+  letter-spacing: 0.4px;
+  background: #f5d87e;
+  color: #0c2235;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.btn-details:hover {
+  background: #e5bf5a;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
 /* Rating Section */
@@ -794,7 +800,15 @@
   }
 
   .card-actions {
-    grid-template-columns: 1fr;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .btn-details {
+    width: 100%;
+    min-width: auto;
+    padding: 10px 14px;
+    align-self: stretch;
   }
 
   .distance-value {
@@ -817,11 +831,22 @@
   }
 
   .physician-card {
-    padding: 15px;
+    padding: 14px;
   }
 
-  .card-header {
-    gap: 12px;
+  .card-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .card-actions {
+    justify-content: flex-start;
+  }
+
+  .btn-details {
+    width: 100%;
+    min-width: auto;
+    padding: 10px 14px;
   }
 
   .physician-image {

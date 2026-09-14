@@ -22,7 +22,10 @@
 }
 
 .nav-content {
-  max-width: 1400px;
+  /* fluid container: cap at 1800px but use viewport percentage on very large screens */
+  max-width: min(1800px, 95vw);
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 1.25rem;
   display: flex;

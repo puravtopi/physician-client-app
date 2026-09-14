@@ -68,7 +68,10 @@ body {
 }
 
 .nav-content {
-  max-width: 1400px;
+  /* fluid container: cap at 1800px but use viewport percentage on very large screens */
+  max-width: min(1800px, 95vw);
+  width: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
@@ -153,11 +156,11 @@ body {
 .btn-primary {
   background: linear-gradient(135deg, var(--primary-gold), var(--gold-dark)) !important;
   color: var(--dark-bg) !important;
-  padding: 0.65rem 1.8rem !important;
+  padding: 0.45rem 1rem !important;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 1.05rem !important;
+  /* font-size: 1.05rem !important; */
   text-transform: uppercase !important;
   letter-spacing: 0.5px;
   display: inline-block;
@@ -203,7 +206,8 @@ body {
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 800px;
+  /* allow hero content to expand on wide screens while staying readable */
+  max-width: min(1200px, 90vw);
   margin: 0 auto;
 }
 
@@ -311,13 +315,12 @@ body {
   gap: 4rem;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
   flex-wrap: wrap;
-  max-width: 1200px;
+  /* make stats container fluid on big screens */
+  max-width: min(1400px, 95vw);
   margin: -3rem auto 0;
   position: relative;
   z-index: 10;
   border-radius: 12px;
-  margin-left: 2rem;
-  margin-right: 2rem;
 }
 
 .stat-item {
@@ -382,7 +385,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2.5rem;
-  max-width: 1200px;
+  max-width: min(1400px, 95vw);
   margin: 0 auto;
 }
 

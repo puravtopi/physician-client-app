@@ -1,0 +1,51 @@
+/* Compact footer styles: smaller, tighter spacing, inline quick links */
+.footer{
+	background:#07283b;
+	color:#e6eef6;
+	font-size:13px;
+	padding:12px 0;
+}
+.footer-content{
+	max-width:1100px;
+	margin:0 auto;
+	display:flex;
+	justify-content:space-between;
+	align-items:center;
+	gap:20px;
+	padding:6px 20px;
+}
+.footer-section h4{
+	margin:0 0 6px 0;
+	font-size:14px;
+	color:#ffd24d;
+}
+.footer-section .inline{
+	list-style:none;
+	margin:0;
+	padding:0;
+	display:flex;
+	gap:18px;
+	align-items:center;
+}
+.footer-section a{
+	color:#cfe6ff;
+	text-decoration:none;
+	font-size:13px;
+}
+.footer-section .social-links a{
+	margin-left:10px;
+	font-size:13px;
+}
+.footer-bottom{
+	text-align:center;
+	padding-top:8px;
+	padding-bottom:6px;
+	font-size:12px;
+	border-top:1px solid rgba(255,255,255,0.04);
+}
+.footer p{margin:6px 0;color:#cbd9e6;font-size:12px}
+
+@media (max-width:600px){
+	.footer-content{flex-direction:column;align-items:flex-start}
+	.footer-section .inline{flex-wrap:wrap;gap:10px}
+}

@@ -19,12 +19,15 @@ export interface Physician {
   phone?: string;
   email?: string;
   website?: string;
+  workingHours?: string[];
   hospital?: string;
 }
 
 export interface PhysicianFilter {
   specialty?: string;
   location?: string;
+  city?: string;
+  state?: string;
   minRating?: number;
   distance?: number;
   availableOnly?: boolean;

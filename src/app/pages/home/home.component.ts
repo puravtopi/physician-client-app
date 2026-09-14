@@ -169,7 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   get canSearch(): boolean {
-    return this.specialtyQuery.trim().length > 0 && /^\d{5}$/.test(this.zipCode);
+    return this.zipCode.trim().length > 0;
   }
 
   onSpecialtyInput(): void {
@@ -229,7 +229,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   onZipInput(): void {
-    this.zipCode = this.zipCode.replace(/\D/g, '').slice(0, 5);
+    this.zipCode = this.zipCode?.trim() || '';
   }
 
   onSearch(): void {

@@ -288,7 +288,7 @@ body {
 }
 
 .zip-field {
-  flex: 0 0 140px;
+  flex: 0 0 240px;
 }
 
 .input-wrapper,
@@ -488,13 +488,13 @@ body {
    FEATURES SECTION
    ===================== */
 .features {
-  padding: 6rem 2rem;
+  padding: 2rem 2rem;
   background: var(--light-bg);
 }
 
 .section-header {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-header h2 {
@@ -560,7 +560,7 @@ body {
    TESTIMONIALS SECTION
    ===================== */
 .testimonials {
-  padding: 6rem 2rem;
+  padding: 2rem 2rem;
   background: var(--white);
 }
 
@@ -610,7 +610,7 @@ body {
    SPECIALTIES SECTION
    ===================== */
 .specialties {
-  padding: 6rem 2rem;
+  padding: 1.5rem 2rem;
   background: var(--light-bg);
 }
 
@@ -630,6 +630,30 @@ body {
   transition: var(--transition);
   box-shadow: var(--shadow);
   border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.specialty-card p {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+.specialty-link {
+  color: var(--primary-gold);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  display: inline-block;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  margin-top: auto;
+  align-self: center;
 }
 
 .specialty-card:hover {
@@ -649,26 +673,6 @@ body {
   margin-bottom: 0.75rem;
   color: var(--text-dark);
   font-weight: 700;
-}
-
-.specialty-card p {
-  color: var(--text-light);
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-
-.specialty-link {
-  color: var(--primary-gold);
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: var(--transition);
-  display: inline-block;
-  border: none;
-  background: none;
-  padding: 0;
-  cursor: pointer;
-  font: inherit;
 }
 
 .specialty-link:hover {

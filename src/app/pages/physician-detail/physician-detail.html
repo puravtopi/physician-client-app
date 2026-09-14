@@ -5,10 +5,10 @@
     <span class="separator">/</span>
     <a routerLink="/physicians">Find Professionals</a>
     <span class="separator">/</span>
-    <a [routerLink]="['/physicians']" [queryParams]="{ specialty: physician.specialty }">
+    <!-- <a [routerLink]="['/physicians']" [queryParams]="{ specialty: physician.specialty }">
       {{ physician.city }}, {{ physician.state }}
-    </a>
-    <span class="separator">/</span>
+    </a> 
+    <span class="separator">/</span>-->
     <span class="current">{{ physician.specialty }}</span>
     <span class="separator">/</span>
     <span class="current">{{ physician.name }}</span>
@@ -17,7 +17,7 @@
   <!-- Profile Hero -->
   <section class="profile-hero">
     <div class="hero-main">
-      <div class="avatar">{{ physician.image }}</div>
+      <!-- <div class="avatar">{{ physician.image }}</div> -->
       <div class="hero-info">
         <div class="hero-badges">
           <span class="badge verified" *ngIf="physician.verified">✓ Verified Provider</span>
@@ -42,7 +42,7 @@
     <main class="detail-main">
       <!-- About -->
       <section class="detail-card">
-        <h2>About {{ physician.name.split(' ').slice(-1)[0] }}</h2>
+        <h2>About {{ physician.name }}</h2>
         <p class="about-text">{{ physician.bio }}</p>
         <div class="highlights">
           <div class="highlight-item">
@@ -69,14 +69,24 @@
       </section>
 
       <!-- Practice Locations -->
-      <section class="detail-card" style="display:none">
-        <h2>Practice Locations</h2>
-        <div class="location-list">
-          <article class="location-item" *ngFor="let location of practiceLocations">
-            <h3>{{ location.name }}</h3>
-            <p class="location-address">{{ location.address }}</p>
-            <a class="location-phone" [href]="'tel:' + location.phone">{{ location.phone }}</a>
-          </article>
+      <section class="detail-card office-details">
+        <h2>Office Details</h2>
+        <div class="info-grid">
+          <div class="info-box">
+            <span class="info-label">Working Hours</span>
+            <ul class="hours-list">
+              <li *ngFor="let item of workingHours">
+                <span>{{ item }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="info-box">
+            <span class="info-label">Website</span>
+            <a class="website-link" [href]="websiteUrl" target="_blank" rel="noopener noreferrer">
+              {{ physician.website || 'NA' }}
+            </a>
+          </div>
         </div>
       </section>
 
@@ -112,16 +122,16 @@
 
     <!-- Sidebar -->
     <aside class="detail-sidebar" >
-      <div class="sidebar-card booking-card" style="display: none;">
+      <div class="sidebar-card booking-card">
         <h3>Book an Appointment</h3>
         <p class="sidebar-text">Schedule with {{ physician.name.split(' ').slice(-1)[0] }} at a time that works for you.</p>
         <div class="availability-badge" [class.available]="physician.availableSlots > 0">
           {{ physician.availableSlots }} slot{{ physician.availableSlots !== 1 ? 's' : '' }} available this week
         </div>
-        <button type="button" class="btn-book" [disabled]="physician.availableSlots === 0">
-          Book Now
-        </button>
-        <a class="btn-call" [href]="'tel:' + physician.phone">📞 Call Office</a>
+        <a [href]="physician.website" target="_blank" class="btn-book" >
+          BOOK NOW
+        </a>
+        <a class="btn-website" [href]="physician.website" target="_blank" rel="noopener noreferrer">🌐 Visit Website</a>
       </div>
 
       <div class="sidebar-card">
@@ -131,10 +141,10 @@
             <span class="contact-label">Phone</span>
             <a [href]="'tel:' + physician.phone">{{ physician.phone }}</a>
           </li>
-          <!-- <li *ngIf="physician.email">
-            <span class="contact-label">Email</span>
-            <a [href]="'mailto:' + physician.email">{{ physician.email }}</a>
-          </li> -->
+          <li *ngIf="physician.website">
+            <span class="contact-label">Website</span>
+            <a [href]="websiteUrl" target="_blank" rel="noopener noreferrer">{{ physician.website }}</a>
+          </li>
           <li>
             <span class="contact-label">Address</span>
             <span>{{ fullAddress }}</span>

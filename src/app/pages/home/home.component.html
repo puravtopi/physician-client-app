@@ -47,7 +47,7 @@
           <div class="search-divider" aria-hidden="true"></div>
 
           <div class="search-field zip-field">
-            <label for="zip-input">Zip Code</label>
+            <label for="zip-input">City / State / Zip </label>
             <div class="input-wrapper">
               <svg class="field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -58,10 +58,7 @@
                 type="text"
                 [(ngModel)]="zipCode"
                 name="zipCode"
-                placeholder="e.g. 10001"
-                maxlength="5"
-                inputmode="numeric"
-                pattern="[0-9]*"
+                placeholder="e.g. New York, NY 10001"
                 (input)="onZipInput()"
               />
             </div>
@@ -80,7 +77,7 @@
   </section>
 
   <!-- Statistics Section -->
-  <section class="stats">
+  <section class="stats" style="display:none">
     <div class="stat-item">
       <div class="stat-number">50K+</div>
       <p>Professionals</p>
@@ -94,6 +91,26 @@
     <div class="stat-item">
       <div class="stat-number">4.8★</div>
       <p>Average Rating</p>
+    </div>
+  </section>
+   <!-- Specialties Section -->
+  <section class="specialties" id="specialties">
+    <div class="section-header">
+      <h2>Find Professionals by Specialty</h2>
+      <p>Browse through our directory of specialists</p>
+    </div>
+    <div class="specialties-grid">
+      <div class="specialty-card" *ngFor="let specialty of specialties">
+        <div class="specialty-icon">{{ specialty.icon ? specialty.icon : '⚕️' }}</div>
+        <h4>{{ specialty.name }}</h4>
+        <p>{{ specialty.description }}</p>
+        <button 
+          type="button"
+          (click)="findProfessional(specialty.name)" 
+          class="specialty-link">
+          Find Professionals →
+        </button>
+      </div>
     </div>
   </section>
 
@@ -128,26 +145,7 @@
     </div>
   </section>
 
-  <!-- Specialties Section -->
-  <section class="specialties" id="specialties">
-    <div class="section-header">
-      <h2>Find Professionals by Specialty</h2>
-      <p>Browse through our directory of specialists</p>
-    </div>
-    <div class="specialties-grid">
-      <div class="specialty-card" *ngFor="let specialty of specialties">
-        <div class="specialty-icon">{{ specialty.icon ? specialty.icon : '⚕️' }}</div>
-        <h4>{{ specialty.name }}</h4>
-        <p>{{ specialty.description }}</p>
-        <button 
-          type="button"
-          (click)="findProfessional(specialty.name)" 
-          class="specialty-link">
-          Find Professionals →
-        </button>
-      </div>
-    </div>
-  </section>
+ 
 
   <!-- Top Physicians Section -->
   <section class="physicians" style="display:none">
