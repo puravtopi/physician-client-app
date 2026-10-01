@@ -41,7 +41,7 @@
     <!-- Main Content -->
     <main class="detail-main">
       <!-- About -->
-      <section class="detail-card">
+      <section class="detail-card" style="display:none">
         <h2>About {{ physician.name }}</h2>
         <p class="about-text">{{ physician.bio }}</p>
         <div class="highlights">
@@ -82,10 +82,23 @@
           </div>
 
           <div class="info-box">
-            <span class="info-label">Website</span>
-            <a class="website-link" [href]="websiteUrl" target="_blank" rel="noopener noreferrer">
-              {{ physician.website || 'NA' }}
-            </a>
+            <span class="info-label">Contact Information</span>
+            <ul class="contact-list">
+              <li *ngIf="physician.phone">
+                <span class="contact-label">Phone</span>
+                <a [href]="'tel:' + physician.phone">{{ physician.phone }}</a>
+              </li>
+              <li *ngIf="physician.website">
+                <span class="contact-label">Website</span>
+                <a [href]="websiteUrl" target="_blank" rel="noopener noreferrer" [title]="physician.website">
+                  Visit Website
+                </a>
+              </li>
+              <li>
+                <span class="contact-label">Address</span>
+                <span>{{ fullAddress }}</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -132,24 +145,6 @@
           BOOK NOW
         </a>
         <a class="btn-website" [href]="physician.website" target="_blank" rel="noopener noreferrer">🌐 Visit Website</a>
-      </div>
-
-      <div class="sidebar-card">
-        <h3>Contact Information</h3>
-        <ul class="contact-list">
-          <li *ngIf="physician.phone">
-            <span class="contact-label">Phone</span>
-            <a [href]="'tel:' + physician.phone">{{ physician.phone }}</a>
-          </li>
-          <li *ngIf="physician.website">
-            <span class="contact-label">Website</span>
-            <a [href]="websiteUrl" target="_blank" rel="noopener noreferrer">{{ physician.website }}</a>
-          </li>
-          <li>
-            <span class="contact-label">Address</span>
-            <span>{{ fullAddress }}</span>
-          </li>
-        </ul>
       </div>
 
       <div class="sidebar-card" style="display:none">

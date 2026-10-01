@@ -180,7 +180,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.filteredSpecialties = [...this.specialties];
     } else {
       this.filteredSpecialties = this.specialties.filter(
-        s => s.name.toLowerCase().includes(query) || s.description.toLowerCase().includes(query)
+        s => s.name.toLowerCase().includes(query)
       );
     }
 
