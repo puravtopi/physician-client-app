@@ -138,7 +138,7 @@
       <div class="sidebar-card booking-card">
         <h3>Book an Appointment</h3>
         <p class="sidebar-text">Schedule with {{ physician.name.split(' ').slice(-1)[0] }} at a time that works for you.</p>
-        <div class="availability-badge" [class.available]="physician.availableSlots > 0">
+        <div style="display: none;" class="availability-badge" [class.available]="physician.availableSlots > 0">
           {{ physician.availableSlots }} slot{{ physician.availableSlots !== 1 ? 's' : '' }} available this week
         </div>
         <a [href]="physician.website" target="_blank" class="btn-book" >
