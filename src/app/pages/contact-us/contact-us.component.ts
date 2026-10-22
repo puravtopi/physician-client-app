@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ApiService } from '../../core/services/api.services';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-contact-us',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [FormsModule, RouterLink],
   templateUrl: './contact-us.component.html',
   styleUrl: './contact-us.component.css'
 })
@@ -23,11 +22,19 @@ export class ContactUsComponent {
 
   constructor(private api: ApiService) {}
 
-  submitForm(): void {
+  submitForm(form: NgForm): void {
+    this.isSubmitted = false;
     // Call backend API to save inquiry
     this.api.post<number>('Inquiry/AddInquiry', this.inquiry).subscribe({
-      next: (res) => {
+      next: () => {
         // backend returns 1 on success in the existing controller
+        this.inquiry = {
+          name: '',
+          email: '',
+          phone: '',
+          note: ''
+        };
+        form.resetForm(this.inquiry);
         this.isSubmitted = true;
         // Optionally still open mail client for user to send the message
         // const subject = `New inquiry from ${this.inquiry.name}`;

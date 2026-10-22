@@ -63,6 +63,34 @@
   margin-bottom: 1rem;
 }
 
+.info-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.map-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.map-heading a {
+  color: #0f3d6e;
+  font-weight: 600;
+}
+
+.location-map {
+  display: block;
+  width: 100%;
+  flex: 1;
+  min-height: 220px;
+  margin-top: 0.75rem;
+  border: 0;
+  border-radius: 14px;
+}
+
 .contact-item {
   margin-top: 1rem;
 }
@@ -127,5 +155,9 @@ textarea {
 @media (max-width: 768px) {
   .contact-grid {
     grid-template-columns: 1fr;
+  }
+
+  .location-map {
+    min-height: 260px;
   }
 }

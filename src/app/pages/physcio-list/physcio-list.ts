@@ -89,6 +89,13 @@ export class PhyscioList implements OnInit {
           this.hasSearchStarted = true;
           this.allPhysicians = []; 
           this.filters.location = /^\d+$/.test(zipcode) ? zipcode : '';
+          this.filters.city = zipcode && !/\d/.test(zipcode) ? zipcode : '';
+
+          if(!/\d/.test(zipcode)){
+            
+            this.loadZips(this.filters.city??''); 
+          }
+
           this.filters.specialty = category ?? '';
           this.loadPhysicians(1);
         }
@@ -145,19 +152,24 @@ export class PhyscioList implements OnInit {
         });
     }
 
-    loadZips()
+    loadZips(city: string = '')
     {
       let ts=this;
        // 1. Set up query parameters
       const params = new HttpParams()
-        .set('searchText', '')
+        .set('searchText', city)
         .set('pageNumber', "1")
-        .set('pageSize', '1000'); // Passing 0 to get all records as per your logic
+        .set('pageSize', '1000');
+       
+         // Passing 0 to get all records as per your logic
   
       // 2. Call the API
       ts.apiService.get<PagedResponse<Zips>>('Specialties/GetZips', params)
         .subscribe({
           next: (response) => {
+            if (city !== this.filters.city) {
+              return;
+            }
             ts.allZips = response.data;
             ts.locations = [...new Set(this.allZips.map(p => p.code.toString()))].sort();
             ts.ctr.detectChanges();
@@ -274,6 +286,12 @@ applyFilters(): void {
     this.applyFilters();
   }
 
+  onCityChange(): void {
+    this.filters.location = '';
+    this.loadZips(this.filters.city);
+    this.applyFilters();
+  }
+
   onSortChange(): void {
     this.applyFilters();
   }
@@ -291,6 +309,7 @@ applyFilters(): void {
       acceptsInsurance: false,
       searchQuery: ''
     };
+    this.loadZips();
     this.hasSearchStarted = false;
     this.filteredPhysicians = [];
     this.totalItems = 0;

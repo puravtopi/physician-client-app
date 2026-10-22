@@ -51,6 +51,20 @@
   color: var(--text-light);
 }
 
+.breadcrumb .specialty-link {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.breadcrumb .specialty-link:hover {
+  color: var(--primary-gold);
+}
+
+.breadcrumb .specialty-link:focus-visible {
+  outline: 2px solid var(--primary-gold);
+  outline-offset: 2px;
+}
+
 /* Profile Hero */
 .profile-hero {
   background: linear-gradient(135deg, var(--dark-bg) 0%, #0a3a6e 100%);
@@ -704,4 +718,3 @@
     gap: 12px;
   }
 }
-

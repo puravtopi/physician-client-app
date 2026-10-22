@@ -9,7 +9,12 @@
       {{ physician.city }}, {{ physician.state }}
     </a> 
     <span class="separator">/</span>-->
-    <span class="current">{{ physician.specialty }}</span>
+    <a
+      
+      [routerLink]="['/physicians']"
+      [queryParams]="{ specialty: physician.specialty }"
+      [attr.aria-label]="'Browse professionals in ' + physician.specialty"
+    >{{ physician.specialty }}</a>
     <span class="separator">/</span>
     <span class="current">{{ physician.name }}</span>
   </nav>

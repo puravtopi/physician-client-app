@@ -60,11 +60,25 @@
         <select
           class="filter-select"
           [(ngModel)]="filters.city"
-          (change)="onFilterChange()"
+          (change)="onCityChange()"
         >
           <option value="">All Cities</option>
           <option *ngFor="let city of allCities" [value]="city">
             {{ city }}
+          </option>
+        </select>
+      </div>
+      <!-- Location Filter -->
+      <div class="filter-group">
+        <label class="filter-label">Zip</label>
+        <select
+          class="filter-select"
+          [(ngModel)]="filters.location"
+          (change)="onFilterChange()"
+        >
+          <option value="">All Zips</option>
+          <option *ngFor="let location of locations" [value]="location">
+            {{ location }}
           </option>
         </select>
       </div>
@@ -83,20 +97,7 @@
         </select>
       </div>
 
-      <!-- Location Filter -->
-      <div class="filter-group">
-        <label class="filter-label">Location</label>
-        <select
-          class="filter-select"
-          [(ngModel)]="filters.location"
-          (change)="onFilterChange()"
-        >
-          <option value="">All Locations</option>
-          <option *ngFor="let location of locations" [value]="location">
-            {{ location }}
-          </option>
-        </select>
-      </div>
+      
 
       <!-- Distance Filter -->
       <div class="filter-group" style="display:none">
@@ -250,7 +251,7 @@
               </div>
             </div>
 
-            <p class="physician-bio">{{ physician.bio || 'This professional has not added a description yet.' }}</p>
+            <p style="display:none;" class="physician-bio">{{ physician.bio || 'This professional has not added a description yet.' }}</p>
 
             <!-- <div class="info-grid" *ngIf="physician.experience || physician.hospital || physician.languages?.length || physician.acceptsInsurance !== undefined">
               <div class="info-card" *ngIf="physician.experience">

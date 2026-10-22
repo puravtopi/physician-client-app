@@ -27,6 +27,24 @@
         <p><a href="mailto:contact@appointmentbk.com">Apptbk01@gmail.com</a></p>
       </div>
 
+      <div class="map-heading">
+        <h2 id="location-heading">Find us</h2>
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=42.368370%2C-83.352707"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Get directions
+        </a>
+      </div>
+      <iframe
+        class="location-map"
+        title="Map showing our location at 42.368370, -83.352707"
+        src="https://maps.google.com/maps?q=42.368370%2C-83.352707&z=15&output=embed"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+
       <!-- <div class="contact-item">
         <h3>Phone</h3>
         <p><a href="tel:+12125550199">+1 (212) 555-0199</a></p>
@@ -35,7 +53,7 @@
 
     <article class="form-card">
       <h2>Send us an inquiry</h2>
-      <form (ngSubmit)="submitForm()" #contactForm="ngForm" novalidate>
+      <form (ngSubmit)="submitForm(contactForm)" #contactForm="ngForm" novalidate>
         <label>
           <span>Name</span>
           <input type="text" name="name" [(ngModel)]="inquiry.name" required />
@@ -61,9 +79,11 @@
         </button>
       </form>
 
-      <p class="form-note" *ngIf="isSubmitted">
-        Your inquiry is ready to be sent through your email app.
-      </p>
+      @if (isSubmitted) {
+        <p class="form-note" role="status">
+          Your inquiry has been submitted successfully.
+        </p>
+      }
     </article>
   </div>
 </section>
