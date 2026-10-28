@@ -104,7 +104,7 @@ export class PhysicianDetail implements OnInit {
             next: (response: string[]) => {
               debugger
               ts.workingHours = response;
-              ts.ctr.detectChanges();
+              ts.ctr.markForCheck();
             },
             error: (err) => {
               console.error('Error fetching physicians', err);
@@ -153,7 +153,7 @@ export class PhysicianDetail implements OnInit {
             next: (response) => {
              
               ts.reviews = response.data;
-              ts.ctr.detectChanges();
+              ts.ctr.markForCheck();
             },
             error: (err) => {
               console.error('Error fetching physicians', err);
@@ -220,7 +220,7 @@ export class PhysicianDetail implements OnInit {
           .subscribe({
             next: (response) => {
              ts.physician=response;
-             ts.ctr.detectChanges();
+             ts.ctr.markForCheck();
              
     // if (ts.physician) {
     //   ts.practiceLocations = ts.buildPracticeLocations(ts.physician);

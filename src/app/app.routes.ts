@@ -66,6 +66,28 @@ export const routes: Routes = [
           description: 'Get in touch with Professionals Booking for appointment support, questions, and healthcare inquiries.',
           keywords: 'contact professionals booking, healthcare support, professional booking help, contact us'
         }
+      },
+      {
+        path: 'privacy-policy',
+        loadComponent: () =>
+          import('./pages/legal/privacy-policy/privacy-policy.component')
+            .then(m => m.PrivacyPolicyComponent),
+        data: {
+          title: 'Privacy Policy | AppointmentBK',
+          description: 'Learn how AppointmentBK handles information you provide when using our website.',
+          keywords: 'privacy policy, AppointmentBK, personal information'
+        }
+      },
+      {
+        path: 'terms-of-use',
+        loadComponent: () =>
+          import('./pages/legal/terms-of-use/terms-of-use.component')
+            .then(m => m.TermsOfUseComponent),
+        data: {
+          title: 'Terms of Use | AppointmentBK',
+          description: 'Review the terms that apply when you use the AppointmentBK website.',
+          keywords: 'terms of use, AppointmentBK, website terms'
+        }
       }]
   }
 ];

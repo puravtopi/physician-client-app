@@ -3,7 +3,7 @@
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a routerLink="/">Home</a>
     <span class="separator">/</span>
-    <a routerLink="/physicians">Find Professionals</a>
+    <a routerLink="/physicians" queryParamsHandling="preserve">Find Professionals</a>
     <span class="separator">/</span>
     <!-- <a [routerLink]="['/physicians']" [queryParams]="{ specialty: physician.specialty }">
       {{ physician.city }}, {{ physician.state }}
@@ -13,6 +13,7 @@
       
       [routerLink]="['/physicians']"
       [queryParams]="{ specialty: physician.specialty }"
+      queryParamsHandling="merge"
       [attr.aria-label]="'Browse professionals in ' + physician.specialty"
     >{{ physician.specialty }}</a>
     <span class="separator">/</span>
@@ -169,6 +170,6 @@
   <div class="not-found">
     <h1>Professional Not Found</h1>
     <p>The professional profile you are looking for does not exist.</p>
-    <a routerLink="/physicians" class="btn-back">← Back to Professionals</a>
+    <a routerLink="/physicians" queryParamsHandling="preserve" class="btn-back">← Back to Professionals</a>
   </div>
 </ng-template>
